@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: "niveau-grotesk", sans-serif !important;
+  }
+
+  body {
+    @apply bg-stone-50;
+  }
+}
+
+.btn-primary {
+  @apply bg-[#59140b] hover:bg-[#6b1a0f] text-white transition-colors;
+}
+
+.btn-secondary {
+  @apply border border-[#59140b] text-[#59140b] hover:bg-[#59140b] hover:text-white transition-colors;
+}
+
+.input-focus {
+  @apply focus:ring-[#59140b] focus:border-[#59140b];
+}
+
+.tag {
+  @apply bg-[#59140b]/10 text-[#59140b];
+}
+
+.modal-overlay {
+  @apply bg-black/40 backdrop-blur-sm;
+}
