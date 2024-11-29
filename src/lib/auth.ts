@@ -74,22 +74,30 @@ export async function updateLastLogin(username: string): Promise<void> {
 
 export async function getCurrentUser(): Promise<{ id: string } | null> {
   try {
+    const currentUsername = localStorage.getItem('currentUser');
+    console.log('Current username from storage:', currentUsername); // Add this debug line
+
+    if (!currentUsername) {
+      console.log('No username found in storage');
+      return null;
+    }
+
     const { data, error } = await supabase
-      .from('kb_users')
-      .select('id, username')
-      .eq('username', localStorage.getItem('currentUser'))
-      .single();
+        .from('kb_users')
+        .select('id, username')
+        .eq('username', currentUsername)
+        .single();
+
+    console.log('User data from db:', data); // Add this debug line
 
     if (error) {
-      await log(LogLevel.ERROR, 'Failed to fetch current user', { error });
+      console.error('Error fetching current user:', error);
       return null;
     }
 
     return data;
   } catch (error) {
-    await log(LogLevel.ERROR, 'Exception fetching current user', {
-      error: error instanceof Error ? error.message : 'Unknown error'
-    });
+    console.error('Exception fetching current user:', error);
     return null;
   }
 }

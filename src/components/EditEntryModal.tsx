@@ -50,17 +50,24 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
   const fetchEntryData = async () => {
     try {
       await log(LogLevel.INFO, 'Fetching entry for editing', { entryId });
+      console.log('Fetching entry with ID:', entryId);
 
       const { data: entryData, error: entryError } = await supabase
-        .from('entries')
-        .select(`
-          *,
-          topics:entry_topics(
-            topics(name)
-          )
-        `)
-        .eq('id', entryId)
-        .single();
+          .from('entries')
+          .select(`
+        *,
+        topics:entry_topics(
+          topics(name)
+        ),
+        support_case(*),
+        product_knowledge(*),
+        process(*)
+      `)
+          .eq('id', entryId)
+          .single();
+
+      console.log('Entry data:', entryData);
+      console.log('Entry error:', entryError);
 
       if (entryError) throw entryError;
 
@@ -71,43 +78,24 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
         topics: entryData.topics.map((t: any) => t.topics.name),
         isFrequent: entryData.is_frequent,
         needsImprovement: entryData.needs_improvement,
-        status: entryData.status
+        status: entryData.status,
+        // Set type-specific fields based on the type
+        ...(entryData.type === EntryType.SUPPORT_CASE && {
+          problem: entryData.support_case?.problem || '',
+          solution: entryData.support_case?.solution || '',
+          customerSatisfaction: entryData.support_case?.customer_satisfaction || 0
+        }),
+        ...(entryData.type === EntryType.PRODUCT_KNOWLEDGE && {
+          knowledgeContent: entryData.product_knowledge?.knowledge_content || ''
+        }),
+        ...(entryData.type === EntryType.PROCESS && {
+          description: entryData.process?.description || ''
+        })
       }));
-
-      const { data: specificData, error: specificError } = await supabase
-        .from(entryData.type)
-        .select('*')
-        .eq('id', entryId)
-        .single();
-
-      if (specificError) throw specificError;
-
-      switch (entryData.type) {
-        case EntryType.SUPPORT_CASE:
-          setFormData(prev => ({
-            ...prev,
-            problem: specificData.problem,
-            solution: specificData.solution,
-            customerSatisfaction: specificData.customer_satisfaction
-          }));
-          break;
-        case EntryType.PRODUCT_KNOWLEDGE:
-          setFormData(prev => ({
-            ...prev,
-            knowledgeContent: specificData.knowledge_content
-          }));
-          break;
-        case EntryType.PROCESS:
-          setFormData(prev => ({
-            ...prev,
-            description: specificData.description
-          }));
-          break;
-      }
 
       await log(LogLevel.INFO, 'Entry data fetched successfully', { entryId });
     } catch (error) {
-      console.error('Error fetching entry:', error);
+      console.error('Detailed error:', error);
       await log(LogLevel.ERROR, 'Failed to fetch entry data', { entryId, error });
       toast.error('Failed to load entry data');
       onClose();
