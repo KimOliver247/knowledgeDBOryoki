@@ -56,61 +56,29 @@ export function KnowledgeForm() {
 
     setIsLoading(true);
     try {
-      await log(LogLevel.INFO, 'Creating new entry', { 
-        type: entryType,
-        status,
-        author: currentUser.id
-      });
+      await log(LogLevel.INFO, 'Creating new entry');
 
+      // First create the main entry
       const { data: entryData, error: entryError } = await supabase
-        .from('entries')
-        .insert([{
-          type: entryType,
-          heading: formData.heading,
-          is_frequent: formData.isFrequent,
-          needs_improvement: formData.needsImprovement,
-          status,
-          author_id: currentUser.id
-        }])
-        .select()
-        .single();
+          .from('entries')
+          .insert([{
+            type: entryType,
+            heading: formData.heading,
+            is_frequent: formData.isFrequent,
+            needs_improvement: formData.needsImprovement,
+            status,
+            author_id: currentUser.id
+          }])
+          .select()
+          .single();
 
       if (entryError) throw entryError;
 
-      for (const topicName of formData.topics) {
-        const { data: topicData, error: topicError } = await supabase
-          .from('topics')
-          .select('id')
-          .eq('name', topicName)
-          .single();
+      console.log('Created main entry:', entryData); // Debug log
 
-        if (topicError) {
-          const { data: newTopic, error: createError } = await supabase
-            .from('topics')
-            .insert([{ name: topicName }])
-            .select()
-            .single();
-
-          if (createError) throw createError;
-
-          await supabase
-            .from('entry_topics')
-            .insert([{
-              entry_id: entryData.id,
-              topic_id: newTopic.id
-            }]);
-        } else {
-          await supabase
-            .from('entry_topics')
-            .insert([{
-              entry_id: entryData.id,
-              topic_id: topicData.id
-            }]);
-        }
-      }
-
+      // Then create the type-specific entry using the SAME ID
       const specificData = {
-        id: entryData.id,
+        id: entryData.id, // Make sure to use the same ID!
         ...(entryType === EntryType.SUPPORT_CASE && {
           problem: formData.problem,
           solution: formData.solution,
@@ -124,23 +92,60 @@ export function KnowledgeForm() {
         })
       };
 
-      const { error: specificError } = await supabase
-        .from(entryType)
-        .insert([specificData]);
+      console.log('Creating specific entry with data:', specificData); // Debug log
 
-      if (specificError) throw specificError;
+      const { data: specificEntryData, error: specificError } = await supabase
+          .from(entryType)
+          .insert([specificData])
+          .select()
+          .single();
 
-      await log(LogLevel.INFO, 'Entry created successfully', { 
-        entryId: entryData.id,
-        type: entryType,
-        status
-      });
+      if (specificError) {
+        console.error('Error creating specific entry:', specificError);
+        // Cleanup the main entry if specific entry creation fails
+        await supabase.from('entries').delete().eq('id', entryData.id);
+        throw specificError;
+      }
 
+      // Handle topics
+      for (const topicName of formData.topics) {
+        const { data: topicData, error: topicError } = await supabase
+            .from('topics')
+            .select('id')
+            .eq('name', topicName)
+            .single();
+
+        if (topicError) {
+          const { data: newTopic, error: createError } = await supabase
+              .from('topics')
+              .insert([{ name: topicName }])
+              .select()
+              .single();
+
+          if (createError) throw createError;
+
+          await supabase
+              .from('entry_topics')
+              .insert([{
+                entry_id: entryData.id,
+                topic_id: newTopic.id
+              }]);
+        } else {
+          await supabase
+              .from('entry_topics')
+              .insert([{
+                entry_id: entryData.id,
+                topic_id: topicData.id
+              }]);
+        }
+      }
+
+      await log(LogLevel.INFO, 'Entry created successfully');
       toast.success(`Entry ${status === 'draft' ? 'saved as draft' : 'published'} successfully!`);
       setFormData(initialFormData);
       setShowForm(false);
     } catch (error) {
-      console.error('Error creating entry:', error);
+      console.error('Detailed error creating entry:', error);
       await log(LogLevel.ERROR, 'Failed to create entry', { error });
       toast.error('Failed to create entry');
     } finally {

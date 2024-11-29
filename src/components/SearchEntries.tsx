@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Eye, Edit, Loader2, X, AlertTriangle, BarChart2, Save, User } from 'lucide-react';
+import { Search, Eye, Edit, Loader2, X, AlertTriangle, BarChart2, Save, User, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { EntryType, Topic } from '../types';
 import { EditEntryModal } from './EditEntryModal';
@@ -44,6 +44,49 @@ export function SearchEntries() {
     fetchEntries();
     fetchTopics();
   }, []);
+
+  const handleDelete = async (entryId: string, entryType: EntryType) => {
+    try {
+      // Delete from type-specific table first
+      const { error: specificError } = await supabase
+          .from(entryType)
+          .delete()
+          .eq('id', entryId);
+
+      if (specificError) {
+        console.error('Error deleting from specific table:', specificError);
+        throw specificError;
+      }
+
+      // Delete related topics
+      const { error: topicsError } = await supabase
+          .from('entry_topics')
+          .delete()
+          .eq('entry_id', entryId);
+
+      if (topicsError) {
+        console.error('Error deleting related topics:', topicsError);
+        throw topicsError;
+      }
+
+      // Finally delete the main entry
+      const { error: entryError } = await supabase
+          .from('entries')
+          .delete()
+          .eq('id', entryId);
+
+      if (entryError) {
+        console.error('Error deleting main entry:', entryError);
+        throw entryError;
+      }
+
+      toast.success('Entry deleted successfully');
+      fetchEntries(); // Refresh the list
+    } catch (error) {
+      console.error('Error deleting entry:', error);
+      toast.error('Failed to delete entry');
+    }
+  };
 
   const availableTopics = useMemo(() => {
     const relevantEntries = selectedType 
@@ -220,32 +263,37 @@ export function SearchEntries() {
                 <div className="flex items-center space-x-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getEntryTypeIcon(entry.type)}`}>
+                      <span
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getEntryTypeIcon(entry.type)}`}>
                         {entry.type.replace('_', ' ').toUpperCase()}
                       </span>
                       <p className="text-sm text-gray-500">
                         {formatDate(entry.created_at)}
                       </p>
                       {entry.status === 'draft' && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                          <Save className="w-3 h-3" />
+                          <span
+                              className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                          <Save className="w-3 h-3"/>
                           Draft
                         </span>
                       )}
                       {entry.is_frequent && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
-                          <BarChart2 className="w-3 h-3" />
+                          <span
+                              className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                          <BarChart2 className="w-3 h-3"/>
                           Frequent
                         </span>
                       )}
                       {entry.needs_improvement && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700">
-                          <AlertTriangle className="w-3 h-3" />
+                          <span
+                              className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700">
+                          <AlertTriangle className="w-3 h-3"/>
                           Needs Improvement
                         </span>
                       )}
-                      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                        <User className="w-3 h-3" />
+                      <span
+                          className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                        <User className="w-3 h-3"/>
                         {entry.author?.username || 'Unknown'}
                       </span>
                     </div>
@@ -253,11 +301,11 @@ export function SearchEntries() {
                       {entry.heading}
                     </p>
                     <div className="flex flex-wrap gap-2 mt-3">
-                      {entry.topics.map(({ topics: { name } }, index) => (
-                        <span
-                          key={`${entry.id}-${name}-${index}`}
-                          className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium tag"
-                        >
+                      {entry.topics.map(({topics: {name}}, index) => (
+                          <span
+                              key={`${entry.id}-${name}-${index}`}
+                              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium tag"
+                          >
                           {name}
                         </span>
                       ))}
@@ -265,49 +313,60 @@ export function SearchEntries() {
                   </div>
                   <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
-                      onClick={() => setViewingEntryId(entry.id)}
-                      className="p-2 text-gray-400 hover:text-[#59140b] rounded-lg transition-colors"
-                      title="View entry"
+                        onClick={() => setViewingEntryId(entry.id)}
+                        className="p-2 text-gray-400 hover:text-[#59140b] rounded-lg transition-colors"
+                        title="View entry"
                     >
-                      <Eye className="w-5 h-5" />
+                      <Eye className="w-5 h-5"/>
                     </button>
                     <button
-                      onClick={() => setEditingEntryId(entry.id)}
-                      className="p-2 text-gray-400 hover:text-[#59140b] rounded-lg transition-colors"
-                      title="Edit entry"
+                        onClick={() => setEditingEntryId(entry.id)}
+                        className="p-2 text-gray-400 hover:text-[#59140b] rounded-lg transition-colors"
+                        title="Edit entry"
                     >
-                      <Edit className="w-5 h-5" />
+                      <Edit className="w-5 h-5"/>
+                    </button>
+                    <button
+                        onClick={() => {
+                          if (confirm('Are you sure you want to delete this entry?')) {
+                            handleDelete(entry.id, entry.type);
+                          }
+                        }}
+                        className="p-2 text-gray-400 hover:text-red-500 rounded-lg transition-colors"
+                        title="Delete entry"
+                    >
+                      <Trash2 className="w-5 h-5"/>
                     </button>
                   </div>
                 </div>
               </li>
             ))}
             {filteredEntries.length === 0 && (
-              <li className="py-12">
-                <div className="text-center text-gray-500">
-                  {entries.length === 0 ? (
-                    <p>No entries found. Start by creating a new entry.</p>
-                  ) : (
-                    <p>No entries match your search criteria.</p>
-                  )}
-                </div>
-              </li>
+                <li className="py-12">
+                  <div className="text-center text-gray-500">
+                    {entries.length === 0 ? (
+                        <p>No entries found. Start by creating a new entry.</p>
+                    ) : (
+                        <p>No entries match your search criteria.</p>
+                    )}
+                  </div>
+                </li>
             )}
           </ul>
         </div>
       </div>
 
       <EditEntryModal
-        entryId={editingEntryId || ''}
-        isOpen={!!editingEntryId}
-        onClose={() => setEditingEntryId(null)}
-        onUpdate={fetchEntries}
+          entryId={editingEntryId || ''}
+          isOpen={!!editingEntryId}
+          onClose={() => setEditingEntryId(null)}
+          onUpdate={fetchEntries}
       />
 
       <ViewEntryModal
-        entryId={viewingEntryId || ''}
-        isOpen={!!viewingEntryId}
-        onClose={() => setViewingEntryId(null)}
+          entryId={viewingEntryId || ''}
+          isOpen={!!viewingEntryId}
+          onClose={() => setViewingEntryId(null)}
       />
     </>
   );
