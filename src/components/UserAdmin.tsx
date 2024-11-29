@@ -96,6 +96,27 @@ export function UserAdmin() {
     });
   };
 
+  const handleDeleteUser = async (userId: string, username: string) => {
+    if (!confirm(`Are you sure you want to delete user ${username}? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      // Call the delete_user RPC function instead of directly deleting
+      const { error } = await supabase.rpc('delete_user', {
+        p_user_id: userId
+      });
+
+      if (error) throw error;
+
+      toast.success('User deleted successfully');
+      fetchUsers();
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast.error('Failed to delete user');
+    }
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
       <div className="flex justify-between items-center mb-8">
@@ -243,16 +264,26 @@ export function UserAdmin() {
                       {formatDate(user.last_login)}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-right">
-                      <button
-                        onClick={() => handleToggleActive(user.id, user.is_active)}
-                        className="text-gray-400 hover:text-[#59140b] transition-colors"
-                      >
-                        {user.is_active ? (
-                          <X className="w-5 h-5" />
-                        ) : (
-                          <Check className="w-5 h-5" />
-                        )}
-                      </button>
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                            onClick={() => handleToggleActive(user.id, user.is_active)}
+                            className="text-gray-400 hover:text-[#59140b] transition-colors"
+                            title={user.is_active ? "Deactivate user" : "Activate user"}
+                        >
+                          {user.is_active ? (
+                              <X className="w-5 h-5"/>
+                          ) : (
+                              <Check className="w-5 h-5"/>
+                          )}
+                        </button>
+                        <button
+                            onClick={() => handleDeleteUser(user.id, user.username)}
+                            className="text-gray-400 hover:text-red-500 transition-colors"
+                            title="Delete user"
+                        >
+                          <Trash2 className="w-5 h-5"/>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
