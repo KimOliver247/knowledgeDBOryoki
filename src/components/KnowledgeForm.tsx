@@ -53,6 +53,14 @@ export function KnowledgeForm() {
       toast.error('User information not available');
       return;
     }
+    const entryToCreate = {
+      type: entryType,
+      heading: formData.heading,
+      is_frequent: formData.isFrequent,
+      needs_improvement: formData.needsImprovement,
+      status,
+      created_by: currentUser.id  // Changed from author_id to created_by
+    };
 
     setIsLoading(true);
     try {
@@ -61,14 +69,7 @@ export function KnowledgeForm() {
       // First create the main entry
       const { data: entryData, error: entryError } = await supabase
           .from('entries')
-          .insert([{
-            type: entryType,
-            heading: formData.heading,
-            is_frequent: formData.isFrequent,
-            needs_improvement: formData.needsImprovement,
-            status,
-            author_id: currentUser.id
-          }])
+          .insert([entryToCreate])
           .select()
           .single();
 
