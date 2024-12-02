@@ -266,17 +266,6 @@ export function UserAdmin() {
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-right">
                       <div className="flex items-center justify-end gap-2">
                         <button
-                            onClick={() => handleToggleActive(user.id, user.is_active)}
-                            className="text-gray-400 hover:text-[#59140b] transition-colors"
-                            title={user.is_active ? "Deactivate user" : "Activate user"}
-                        >
-                          {user.is_active ? (
-                              <X className="w-5 h-5"/>
-                          ) : (
-                              <Check className="w-5 h-5"/>
-                          )}
-                        </button>
-                        <button
                             onClick={() => handleDeleteUser(user.id, user.username)}
                             className="text-gray-400 hover:text-red-500 transition-colors"
                             title="Delete user"
