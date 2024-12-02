@@ -42,11 +42,29 @@ export function SearchEntries() {
   const [isLoading, setIsLoading] = useState(true);
   const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
   const [viewingEntryId, setViewingEntryId] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [users, setUsers] = useState<Array<{ id: string, username: string }>>([]);
 
   useEffect(() => {
     fetchEntries();
     fetchTopics();
+    fetchUsers();
   }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const { data, error } = await supabase
+          .from('kb_users')
+          .select('id, username')
+          .order('username');
+
+      if (error) throw error;
+      setUsers(data || []);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      toast.error('Failed to load users');
+    }
+  };
 
   const handleDelete = async (entryId: string, entryType: EntryType) => {
     try {
@@ -116,9 +134,14 @@ export function SearchEntries() {
       const matchesType = !selectedType || entry.type === selectedType;
       const matchesDraftFilter = !showDraftsOnly || entry.status === 'draft';
 
-      return matchesSearch && matchesTopics && matchesType && matchesDraftFilter;
+      // Add user filter
+      const matchesUser = !selectedUser ||
+          entry.author?.id === selectedUser ||
+          entry.last_modified_by?.id === selectedUser;
+
+      return matchesSearch && matchesTopics && matchesType && matchesDraftFilter && matchesUser;
     });
-  }, [entries, searchQuery, selectedTopics, selectedType, showDraftsOnly]);
+  }, [entries, searchQuery, selectedTopics, selectedType, showDraftsOnly, selectedUser]);
 
   const fetchEntries = async () => {
     try {
@@ -209,38 +232,56 @@ export function SearchEntries() {
       <>
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
           <div className="space-y-6">
-            <div className="flex flex-wrap gap-2 mb-6">
-              {ENTRY_TYPES.map((type) => (
-                  <button
-                      key={type.id}
-                      onClick={() => toggleType(type.id)}
-                      className={`group flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${
-                          selectedType === type.id
-                              ? 'bg-[#59140b] text-white border-[#59140b]'
-                              : 'border-gray-200 hover:border-[#59140b] text-gray-600 hover:text-[#59140b]'
-                      }`}
-                  >
-                    <span>{type.label}</span>
-                    {selectedType === type.id && (
-                        <X className="w-4 h-4 opacity-50 group-hover:opacity-100" />
-                    )}
-                  </button>
-              ))}
+            {/* First row with justified content */}
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
+              {/* Left side filters wrapped in a div */}
+              <div className="flex flex-wrap items-center gap-2">
+                {ENTRY_TYPES.map((type) => (
+                    <button
+                        key={type.id}
+                        onClick={() => toggleType(type.id)}
+                        className={`group flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${
+                            selectedType === type.id
+                                ? 'bg-[#59140b] text-white border-[#59140b]'
+                                : 'border-gray-200 hover:border-[#59140b] text-gray-600 hover:text-[#59140b]'
+                        }`}
+                    >
+                      <span>{type.label}</span>
+                      {selectedType === type.id && (
+                          <X className="w-4 h-4 opacity-50 group-hover:opacity-100"/>
+                      )}
+                    </button>
+                ))}
 
-              <button
-                  onClick={() => setShowDraftsOnly(!showDraftsOnly)}
-                  className={`group flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${
-                      showDraftsOnly
-                          ? 'bg-[#59140b] text-white border-[#59140b]'
-                          : 'border-gray-200 hover:border-[#59140b] text-gray-600 hover:text-[#59140b]'
-                  }`}
+                <button
+                    onClick={() => setShowDraftsOnly(!showDraftsOnly)}
+                    className={`group flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${
+                        showDraftsOnly
+                            ? 'bg-[#59140b] text-white border-[#59140b]'
+                            : 'border-gray-200 hover:border-[#59140b] text-gray-600 hover:text-[#59140b]'
+                    }`}
+                >
+                  <Save className="w-4 h-4"/>
+                  <span>Drafts Only</span>
+                  {showDraftsOnly && (
+                      <X className="w-4 h-4 opacity-50 group-hover:opacity-100"/>
+                  )}
+                </button>
+              </div>
+
+              {/* Right-aligned user dropdown */}
+              <select
+                  value={selectedUser || ''}
+                  onChange={(e) => setSelectedUser(e.target.value || null)}
+                  className="px-4 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#59140b]/20 transition-colors"
               >
-                <Save className="w-4 h-4" />
-                <span>Drafts Only</span>
-                {showDraftsOnly && (
-                    <X className="w-4 h-4 opacity-50 group-hover:opacity-100" />
-                )}
-              </button>
+                <option value="">All Users</option>
+                {users.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.username}
+                    </option>
+                ))}
+              </select>
             </div>
 
             <div className="flex flex-wrap gap-2 mb-6">
@@ -256,7 +297,7 @@ export function SearchEntries() {
                   >
                     <span>{topic.name}</span>
                     {selectedTopics.includes(topic.name) && (
-                        <X className="w-4 h-4 opacity-50 group-hover:opacity-100" />
+                        <X className="w-4 h-4 opacity-50 group-hover:opacity-100"/>
                     )}
                   </button>
               ))}
@@ -267,7 +308,7 @@ export function SearchEntries() {
 
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
+                <Search className="h-5 w-5 text-gray-400"/>
               </div>
               <input
                   type="text"
@@ -286,13 +327,15 @@ export function SearchEntries() {
                     <div className="flex items-center space-x-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3">
-                      <span
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getEntryTypeIcon(entry.type)}`}
-                      >
-    {entry.type.replace('_', ' ').toUpperCase()}
-</span>
+                    <span
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getEntryTypeIcon(
+                            entry.type
+                        )}`}
+                    >
+                      {entry.type.replace('_', ' ').toUpperCase()}
+                    </span>
                           <div className="flex items-center gap-2">
-                            <Clock className="w-3 h-3 text-gray-500" />
+                            <Clock className="w-3 h-3 text-gray-500"/>
                             <p className="text-sm text-gray-500">
                               Created: {formatDate(entry.created_at)}
                               {entry.last_modified_at && (
@@ -301,39 +344,41 @@ export function SearchEntries() {
                             </p>
                           </div>
                           {entry.status === 'draft' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-        <Save className="w-3 h-3" />
-        Draft
-    </span>
+                              <span
+                                  className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                        <Save className="w-3 h-3"/>
+                        Draft
+                      </span>
                           )}
                           {entry.is_frequent && (
-                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
-                          <BarChart2 className="w-3 h-3" />
-                          Frequent
-                        </span>
+                              <span
+                                  className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                        <BarChart2 className="w-3 h-3"/>
+                        Frequent
+                      </span>
                           )}
                           {entry.needs_improvement && (
-                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700">
-                          <AlertTriangle className="w-3 h-3" />
-                          Needs Improvement
-                        </span>
-                          )}
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                        <User className="w-3 h-3" />
-                            {entry.author?.username || 'Unknown'}
+                              <span
+                                  className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700">
+                        <AlertTriangle className="w-3 h-3"/>
+                        Needs Improvement
                       </span>
+                          )}
+                          <span
+                              className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                      <User className="w-3 h-3"/>
+                            {entry.author?.username || 'Unknown'}
+                    </span>
                         </div>
-                        <p className="text-lg font-medium text-gray-900 mt-2">
-                          {entry.heading}
-                        </p>
+                        <p className="text-lg font-medium text-gray-900 mt-2">{entry.heading}</p>
                         <div className="flex flex-wrap gap-2 mt-3">
                           {entry.topics.map(({topics: {name}}, index) => (
                               <span
                                   key={`${entry.id}-${name}-${index}`}
                                   className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium tag"
                               >
-                          {name}
-                        </span>
+                        {name}
+                      </span>
                           ))}
                         </div>
                       </div>
@@ -343,14 +388,14 @@ export function SearchEntries() {
                             className="p-2 text-gray-400 hover:text-[#59140b] rounded-lg transition-colors"
                             title="View entry"
                         >
-                          <Eye className="w-5 h-5" />
+                          <Eye className="w-5 h-5"/>
                         </button>
                         <button
                             onClick={() => setEditingEntryId(entry.id)}
                             className="p-2 text-gray-400 hover:text-[#59140b] rounded-lg transition-colors"
                             title="Edit entry"
                         >
-                          <Edit className="w-5 h-5" />
+                          <Edit className="w-5 h-5"/>
                         </button>
                         <button
                             onClick={() => {
@@ -361,39 +406,39 @@ export function SearchEntries() {
                             className="p-2 text-gray-400 hover:text-red-500 rounded-lg transition-colors"
                             title="Delete entry"
                         >
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 className="w-5 h-5"/>
                         </button>
                       </div>
                     </div>
                   </li>
               ))}
-            {filteredEntries.length === 0 && (
-                <li className="py-12">
-                  <div className="text-center text-gray-500">
-                    {entries.length === 0 ? (
-                        <p>No entries found. Start by creating a new entry.</p>
-                    ) : (
-                        <p>No entries match your search criteria.</p>
-                    )}
-                  </div>
-                </li>
-            )}
-          </ul>
+              {filteredEntries.length === 0 && (
+                  <li className="py-12">
+                    <div className="text-center text-gray-500">
+                      {entries.length === 0 ? (
+                          <p>No entries found. Start by creating a new entry.</p>
+                      ) : (
+                          <p>No entries match your search criteria.</p>
+                      )}
+                    </div>
+                  </li>
+              )}
+            </ul>
+          </div>
         </div>
-      </div>
 
-      <EditEntryModal
-          entryId={editingEntryId || ''}
-          isOpen={!!editingEntryId}
-          onClose={() => setEditingEntryId(null)}
-          onUpdate={fetchEntries}
-      />
+        <EditEntryModal
+            entryId={editingEntryId || ''}
+            isOpen={!!editingEntryId}
+            onClose={() => setEditingEntryId(null)}
+            onUpdate={fetchEntries}
+        />
 
-      <ViewEntryModal
-          entryId={viewingEntryId || ''}
-          isOpen={!!viewingEntryId}
-          onClose={() => setViewingEntryId(null)}
-      />
-    </>
+        <ViewEntryModal
+            entryId={viewingEntryId || ''}
+            isOpen={!!viewingEntryId}
+            onClose={() => setViewingEntryId(null)}
+        />
+      </>
   );
 }
