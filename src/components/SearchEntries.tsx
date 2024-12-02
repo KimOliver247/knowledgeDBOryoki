@@ -5,12 +5,14 @@ import { EntryType, Topic } from '../types';
 import { EditEntryModal } from './EditEntryModal';
 import { ViewEntryModal } from './ViewEntryModal';
 import toast from 'react-hot-toast';
+import { Clock } from 'lucide-react';
 
 interface Entry {
   id: string;
   type: EntryType;
   heading: string;
   created_at: string;
+  last_modified_at: string | null;
   is_frequent: boolean;
   needs_improvement: boolean;
   status: 'draft' | 'published';
@@ -123,23 +125,23 @@ export function SearchEntries() {
       const { data, error } = await supabase
           .from('entries')
           .select(`
-    id,
-    type,
-    heading,
-    created_at,
-    is_frequent,
-    needs_improvement,
-    status,
-    author:kb_users!created_by(id, username),
-    topics:entry_topics(topics(name))
-  `)
+        id,
+        type,
+        heading,
+        created_at,
+        last_modified_at,
+        is_frequent,
+        needs_improvement,
+        status,
+        author:kb_users!entries_created_by_fkey(id, username),
+        topics:entry_topics(topics(name))
+      `)
           .order('created_at', { ascending: false });
 
       if (error) {
         console.error('Fetch error:', error);
         throw error;
       }
-      console.log('Fetched entries:', data);  // Add this line
       setEntries(data || []);
     } catch (error) {
       console.error('Error fetching entries:', error);
@@ -287,16 +289,22 @@ export function SearchEntries() {
                       <span
                           className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getEntryTypeIcon(entry.type)}`}
                       >
-                        {entry.type.replace('_', ' ').toUpperCase()}
-                      </span>
-                          <p className="text-sm text-gray-500">
-                            {formatDate(entry.created_at)}
-                          </p>
+    {entry.type.replace('_', ' ').toUpperCase()}
+</span>
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-3 h-3 text-gray-500" />
+                            <p className="text-sm text-gray-500">
+                              Created: {formatDate(entry.created_at)}
+                              {entry.last_modified_at && (
+                                  <span className="ml-2">• Modified: {formatDate(entry.last_modified_at)}</span>
+                              )}
+                            </p>
+                          </div>
                           {entry.status === 'draft' && (
                               <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                          <Save className="w-3 h-3" />
-                          Draft
-                        </span>
+        <Save className="w-3 h-3" />
+        Draft
+    </span>
                           )}
                           {entry.is_frequent && (
                               <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">

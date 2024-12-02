@@ -75,10 +75,8 @@ export async function updateLastLogin(username: string): Promise<void> {
 export async function getCurrentUser(): Promise<{ id: string } | null> {
   try {
     const currentUsername = localStorage.getItem('currentUser');
-    console.log('Current username from storage:', currentUsername); // Add this debug line
 
     if (!currentUsername) {
-      console.log('No username found in storage');
       return null;
     }
 
@@ -87,8 +85,6 @@ export async function getCurrentUser(): Promise<{ id: string } | null> {
         .select('id, username')
         .eq('username', currentUsername)
         .single();
-
-    console.log('User data from db:', data); // Add this debug line
 
     if (error) {
       console.error('Error fetching current user:', error);
