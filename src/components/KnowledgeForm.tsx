@@ -75,7 +75,6 @@ export function KnowledgeForm() {
 
       if (entryError) throw entryError;
 
-      console.log('Created main entry:', entryData); // Debug log
 
       // Then create the type-specific entry using the SAME ID
       const specificData = {
@@ -93,7 +92,6 @@ export function KnowledgeForm() {
         })
       };
 
-      console.log('Creating specific entry with data:', specificData); // Debug log
 
       const { data: specificEntryData, error: specificError } = await supabase
           .from(entryType)

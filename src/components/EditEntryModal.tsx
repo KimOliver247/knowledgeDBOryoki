@@ -50,7 +50,6 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
   const fetchEntryData = async () => {
     try {
       await log(LogLevel.INFO, 'Fetching entry for editing', { entryId });
-      console.log('Fetching entry with ID:', entryId);
 
       const { data: entryData, error: entryError } = await supabase
           .from('entries')
@@ -65,9 +64,6 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
       `)
           .eq('id', entryId)
           .single();
-
-      console.log('Entry data:', entryData);
-      console.log('Entry error:', entryError);
 
       if (entryError) throw entryError;
 
@@ -95,7 +91,6 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
 
       await log(LogLevel.INFO, 'Entry data fetched successfully', { entryId });
     } catch (error) {
-      console.error('Detailed error:', error);
       await log(LogLevel.ERROR, 'Failed to fetch entry data', { entryId, error });
       toast.error('Failed to load entry data');
       onClose();
@@ -105,7 +100,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({
       ...formData,
@@ -125,51 +120,56 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
     try {
       await log(LogLevel.INFO, 'Updating entry', { entryId });
 
-      const { error: entryError } = await supabase
-        .from('entries')
-        .update({
-          heading: formData.heading,
-          is_frequent: formData.isFrequent,
-          needs_improvement: formData.needsImprovement,
-          last_modified_by: currentUser.id,
-          last_modified_at: new Date().toISOString()
-        })
-        .eq('id', entryId);
+      const updatePayload = {
+        heading: formData.heading,
+        is_frequent: formData.isFrequent,
+        needs_improvement: formData.needsImprovement,
+        last_modified_by: currentUser.id,
+        last_modified_at: new Date().toISOString()
+      };
 
-      if (entryError) throw entryError;
+      const { data: updateResult, error: entryError } = await supabase
+          .from('entries')
+          .update(updatePayload)
+          .eq('id', entryId)
+          .select();
+
+      if (entryError) {
+        throw entryError;
+      }
 
       // Update topics
       await supabase
-        .from('entry_topics')
-        .delete()
-        .eq('entry_id', entryId);
+          .from('entry_topics')
+          .delete()
+          .eq('entry_id', entryId);
 
       for (const topicName of formData.topics) {
         let topicId;
         const { data: existingTopic } = await supabase
-          .from('topics')
-          .select('id')
-          .eq('name', topicName)
-          .single();
+            .from('topics')
+            .select('id')
+            .eq('name', topicName)
+            .single();
 
         if (existingTopic) {
           topicId = existingTopic.id;
         } else {
           const { data: newTopic } = await supabase
-            .from('topics')
-            .insert([{ name: topicName }])
-            .select()
-            .single();
+              .from('topics')
+              .insert([{ name: topicName }])
+              .select()
+              .single();
           topicId = newTopic?.id;
         }
 
         if (topicId) {
           await supabase
-            .from('entry_topics')
-            .insert([{
-              entry_id: entryId,
-              topic_id: topicId
-            }]);
+              .from('entry_topics')
+              .insert([{
+                entry_id: entryId,
+                topic_id: topicId
+              }]);
         }
       }
 
@@ -188,9 +188,9 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
       };
 
       const { error: specificError } = await supabase
-        .from(entryType)
-        .update(specificData)
-        .eq('id', entryId);
+          .from(entryType)
+          .update(specificData)
+          .eq('id', entryId);
 
       if (specificError) throw specificError;
 
@@ -199,7 +199,6 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
       onUpdate();
       onClose();
     } catch (error) {
-      console.error('Error updating entry:', error);
       await log(LogLevel.ERROR, 'Failed to update entry', { entryId, error });
       toast.error('Failed to update entry');
     } finally {
