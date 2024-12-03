@@ -117,108 +117,110 @@ export function TopicMultiSelect({ selectedTopics, onChange }: TopicMultiSelectP
     topics.some(t => t.name.toLowerCase() === searchQuery.trim().toLowerCase());
 
   return (
-    <div className="relative" ref={containerRef}>
-      <div className="mt-1">
-        <div
-          className="relative w-full cursor-pointer border border-gray-200 rounded-lg bg-white"
-          onClick={() => {
-            setIsOpen(true);
-            setTimeout(() => inputRef.current?.focus(), 0);
-          }}
-        >
-          <div className="min-h-[2.75rem] flex flex-wrap gap-1.5 p-2">
-            {selectedTopics.length > 0 ? (
-              selectedTopics.map(topic => (
-                <span
-                  key={topic}
-                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm bg-[#59140b]/10 text-[#59140b]"
-                >
+      <div className="relative" ref={containerRef}>
+        <div className="mt-1">
+          <div
+              className="relative w-full cursor-pointer border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700"
+              onClick={() => {
+                setIsOpen(true);
+                setTimeout(() => inputRef.current?.focus(), 0);
+              }}
+          >
+            <div className="min-h-[2.75rem] flex flex-wrap gap-1.5 p-2">
+              {selectedTopics.length > 0 ? (
+                  selectedTopics.map(topic => (
+                      <span
+                          key={topic}
+                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm bg-[#59140b]/10 text-[#59140b] dark:bg-[#59140b]/50 dark:text-white"
+                      >
                   {topic}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleTopic(topic);
-                    }}
-                    className="ml-1.5 inline-flex items-center justify-center rounded-full text-[#59140b]/70 hover:text-[#59140b] focus:outline-none"
-                  >
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleTopic(topic);
+                            }}
+                            className="ml-1.5 inline-flex items-center justify-center rounded-full text-[#59140b]/70 hover:text-[#59140b] dark:text-white/70 dark:hover:text-white focus:outline-none"
+                        >
                     <X className="h-3.5 w-3.5" />
                   </button>
                 </span>
-              ))
-            ) : (
-              <span className="text-gray-500">Select or create topics</span>
-            )}
-          </div>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-            <ChevronDown className="h-5 w-5 text-gray-400" />
-          </div>
-        </div>
-      </div>
-
-      {isOpen && (
-        <div className="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-lg py-1 text-base ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-          <div className="sticky top-0 bg-white px-3 py-2">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-gray-400" />
-              </div>
-              <input
-                ref={inputRef}
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-md text-sm input-focus"
-                placeholder="Search or create topic..."
-                onClick={(e) => e.stopPropagation()}
-              />
+                  ))
+              ) : (
+                  <span className="text-gray-500 dark:text-gray-400">Select or create topics</span>
+              )}
+            </div>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+              <ChevronDown className="h-5 w-5 text-gray-400 dark:text-gray-500" />
             </div>
           </div>
+        </div>
 
-          <div className="max-h-60 overflow-auto">
-            {filteredTopics.length > 0 && (
-              <div className="py-1">
-                {filteredTopics.map((topic) => (
-                  <button
-                    key={topic.id}
-                    type="button"
-                    onClick={() => toggleTopic(topic.name)}
-                    className="flex items-center justify-between w-full px-4 py-2 text-sm hover:bg-stone-50 transition-colors"
-                  >
-                    <span className={selectedTopics.includes(topic.name) ? 'text-[#59140b] font-medium' : 'text-gray-900'}>
+        {isOpen && (
+            <div className="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg py-1 text-base ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              <div className="sticky top-0 bg-white dark:bg-gray-800 px-3 py-2">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Search className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+                  </div>
+                  <input
+                      ref={inputRef}
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="block w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md text-sm input-focus"
+                      placeholder="Search or create topic..."
+                      onClick={(e) => e.stopPropagation()}
+                  />
+                </div>
+              </div>
+
+              <div className="max-h-60 overflow-auto">
+                {filteredTopics.length > 0 && (
+                    <div className="py-1">
+                      {filteredTopics.map((topic) => (
+                          <button
+                              key={topic.id}
+                              type="button"
+                              onClick={() => toggleTopic(topic.name)}
+                              className="flex items-center justify-between w-full px-4 py-2 text-sm hover:bg-stone-50 dark:hover:bg-gray-700/50 transition-colors"
+                          >
+                    <span className={selectedTopics.includes(topic.name)
+                        ? 'text-[#59140b] dark:text-[#ff8b7e] font-medium'
+                        : 'text-gray-900 dark:text-white'}>
                       {topic.name}
                     </span>
-                    {selectedTopics.includes(topic.name) && (
-                      <Check className="h-4 w-4 text-[#59140b]" />
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
+                            {selectedTopics.includes(topic.name) && (
+                                <Check className="h-4 w-4 text-[#59140b] dark:text-[#ff8b7e]" />
+                            )}
+                          </button>
+                      ))}
+                    </div>
+                )}
 
-            {searchQuery.trim() !== '' && !exactMatchExists && (
-              <>
-                <div className="px-3 py-2 border-t border-gray-100">
-                  <button
-                    type="button"
-                    onClick={handleAddNewTopic}
-                    className="flex items-center gap-2 w-full px-3 py-2 text-sm text-[#59140b] hover:bg-[#59140b]/5 rounded-md transition-colors"
-                  >
-                    <Plus className="h-4 w-4" />
-                    Create "{capitalizeFirstLetter(searchQuery.trim())}"
-                  </button>
-                </div>
-              </>
-            )}
+                {searchQuery.trim() !== '' && !exactMatchExists && (
+                    <>
+                      <div className="px-3 py-2 border-t border-gray-100 dark:border-gray-700">
+                        <button
+                            type="button"
+                            onClick={handleAddNewTopic}
+                            className="flex items-center gap-2 w-full px-3 py-2 text-sm text-[#59140b] dark:text-[#ff8b7e] hover:bg-[#59140b]/5 dark:hover:bg-[#59140b]/20 rounded-md transition-colors"
+                        >
+                          <Plus className="h-4 w-4" />
+                          Create "{capitalizeFirstLetter(searchQuery.trim())}"
+                        </button>
+                      </div>
+                    </>
+                )}
 
-            {filteredTopics.length === 0 && searchQuery.trim() === '' && (
-              <div className="px-4 py-6 text-sm text-center text-gray-500">
-                Start typing to search or create a topic
+                {filteredTopics.length === 0 && searchQuery.trim() === '' && (
+                    <div className="px-4 py-6 text-sm text-center text-gray-500 dark:text-gray-400">
+                      Start typing to search or create a topic
+                    </div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
+            </div>
+        )}
+      </div>
   );
 }

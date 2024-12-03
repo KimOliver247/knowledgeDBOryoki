@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { Toaster } from 'react-hot-toast';
+import { DarkModeProvider } from './components/DarkModeContext'; // Add this import
 import { Auth } from './components/Auth';
 import { Layout } from './components/Layout';
 import { KnowledgeForm } from './components/KnowledgeForm';
 import { UserAdmin } from './components/UserAdmin';
 import { Settings } from './components/Settings';
-import { Toaster } from 'react-hot-toast';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -39,22 +40,22 @@ function App() {
   };
 
   return (
-    <>
-      <Toaster position="top-right" />
-      {!isAuthenticated ? (
-        <Auth onAuth={handleAuth} />
-      ) : (
-        <Layout
-          currentUser={currentUser}
-          isAdmin={isAdmin}
-          activeView={activeView}
-          onNavigate={setActiveView}
-          onLogout={handleLogout}
-        >
-          {renderContent()}
-        </Layout>
-      )}
-    </>
+      <DarkModeProvider> {/* Add this wrapper */}
+        <Toaster position="top-right" />
+        {!isAuthenticated ? (
+            <Auth onAuth={handleAuth} />
+        ) : (
+            <Layout
+                currentUser={currentUser}
+                isAdmin={isAdmin}
+                activeView={activeView}
+                onNavigate={setActiveView}
+                onLogout={handleLogout}
+            >
+              {renderContent()}
+            </Layout>
+        )}
+      </DarkModeProvider>
   );
 }
 

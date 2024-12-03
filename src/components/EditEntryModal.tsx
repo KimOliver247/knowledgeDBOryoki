@@ -209,172 +209,172 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div className="fixed inset-0 transition-opacity modal-overlay" onClick={onClose} />
+      <div className="fixed inset-0 z-50 overflow-y-auto">
+        <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+          <div className="fixed inset-0 transition-opacity modal-overlay" onClick={onClose} />
 
-        <div className="inline-block w-full max-w-2xl my-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded-lg shadow-xl">
-          <div className="flex items-center justify-between px-6 py-4 border-b">
-            <h3 className="text-lg font-medium text-gray-900">Edit Entry</h3>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-gray-500 focus:outline-none"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </div>
+          <div className="inline-block w-full max-w-2xl my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">Edit Entry</h3>
+              <button
+                  onClick={onClose}
+                  className="text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
 
-          <form onSubmit={handleSubmit} className="px-6 py-4">
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Topics</label>
-                <TopicMultiSelect
-                  selectedTopics={formData.topics}
-                  onChange={(topics) => setFormData(prev => ({ ...prev, topics }))}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="heading" className="block text-sm font-medium text-gray-700 mb-2">
-                  Heading
-                </label>
-                <input
-                  type="text"
-                  id="heading"
-                  name="heading"
-                  value={formData.heading}
-                  onChange={handleInputChange}
-                  className="block w-full px-4 py-3 rounded-lg border border-gray-200 input-focus transition-colors"
-                  required
-                />
-              </div>
-
-              <div className="flex gap-6">
-                <label className="relative inline-flex items-center">
-                  <input
-                    type="checkbox"
-                    className="sr-only peer"
-                    checked={formData.isFrequent}
-                    onChange={(e) => setFormData(prev => ({ ...prev, isFrequent: e.target.checked }))}
+            <form onSubmit={handleSubmit} className="px-6 py-4">
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Topics</label>
+                  <TopicMultiSelect
+                      selectedTopics={formData.topics}
+                      onChange={(topics) => setFormData(prev => ({ ...prev, topics }))}
                   />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#59140b]/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#59140b]"></div>
-                  <span className="ms-3 text-sm font-medium text-gray-900 flex items-center gap-2">
+                </div>
+
+                <div>
+                  <label htmlFor="heading" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Heading
+                  </label>
+                  <input
+                      type="text"
+                      id="heading"
+                      name="heading"
+                      value={formData.heading}
+                      onChange={handleInputChange}
+                      className="block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                      required
+                  />
+                </div>
+
+                <div className="flex gap-6">
+                  <label className="relative inline-flex items-center">
+                    <input
+                        type="checkbox"
+                        className="sr-only peer"
+                        checked={formData.isFrequent}
+                        onChange={(e) => setFormData(prev => ({ ...prev, isFrequent: e.target.checked }))}
+                    />
+                    <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#59140b]/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#59140b]"></div>
+                    <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
                     <BarChart2 className="w-4 h-4" />
                     Occurs Frequently
                   </span>
-                </label>
+                  </label>
 
-                <label className="relative inline-flex items-center">
-                  <input
-                    type="checkbox"
-                    className="sr-only peer"
-                    checked={formData.needsImprovement}
-                    onChange={(e) => setFormData(prev => ({ ...prev, needsImprovement: e.target.checked }))}
-                  />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#59140b]/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#59140b]"></div>
-                  <span className="ms-3 text-sm font-medium text-gray-900 flex items-center gap-2">
+                  <label className="relative inline-flex items-center">
+                    <input
+                        type="checkbox"
+                        className="sr-only peer"
+                        checked={formData.needsImprovement}
+                        onChange={(e) => setFormData(prev => ({ ...prev, needsImprovement: e.target.checked }))}
+                    />
+                    <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#59140b]/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#59140b]"></div>
+                    <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
                     <AlertTriangle className="w-4 h-4" />
                     Needs Improvement
                   </span>
-                </label>
+                  </label>
+                </div>
+
+                {entryType === EntryType.SUPPORT_CASE && (
+                    <>
+                      <div>
+                        <label htmlFor="problem" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Problem
+                        </label>
+                        <textarea
+                            id="problem"
+                            name="problem"
+                            value={formData.problem}
+                            onChange={handleInputChange}
+                            rows={4}
+                            className="block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                            required
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="solution" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Solution
+                        </label>
+                        <textarea
+                            id="solution"
+                            name="solution"
+                            value={formData.solution}
+                            onChange={handleInputChange}
+                            rows={4}
+                            className="block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                            required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Customer Satisfaction
+                        </label>
+                        <StarRating
+                            value={formData.customerSatisfaction}
+                            onChange={(rating) => setFormData(prev => ({ ...prev, customerSatisfaction: rating }))}
+                        />
+                      </div>
+                    </>
+                )}
+
+                {entryType === EntryType.PRODUCT_KNOWLEDGE && (
+                    <div>
+                      <label htmlFor="knowledgeContent" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Knowledge Content
+                      </label>
+                      <textarea
+                          id="knowledgeContent"
+                          name="knowledgeContent"
+                          value={formData.knowledgeContent}
+                          onChange={handleInputChange}
+                          rows={6}
+                          className="block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                          required
+                      />
+                    </div>
+                )}
+
+                {entryType === EntryType.PROCESS && (
+                    <div>
+                      <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Description
+                      </label>
+                      <textarea
+                          id="description"
+                          name="description"
+                          value={formData.description}
+                          onChange={handleInputChange}
+                          rows={6}
+                          className="block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                          required
+                      />
+                    </div>
+                )}
               </div>
 
-              {entryType === EntryType.SUPPORT_CASE && (
-                <>
-                  <div>
-                    <label htmlFor="problem" className="block text-sm font-medium text-gray-700 mb-2">
-                      Problem
-                    </label>
-                    <textarea
-                      id="problem"
-                      name="problem"
-                      value={formData.problem}
-                      onChange={handleInputChange}
-                      rows={4}
-                      className="block w-full px-4 py-3 rounded-lg border border-gray-200 input-focus transition-colors"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="solution" className="block text-sm font-medium text-gray-700 mb-2">
-                      Solution
-                    </label>
-                    <textarea
-                      id="solution"
-                      name="solution"
-                      value={formData.solution}
-                      onChange={handleInputChange}
-                      rows={4}
-                      className="block w-full px-4 py-3 rounded-lg border border-gray-200 input-focus transition-colors"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Customer Satisfaction
-                    </label>
-                    <StarRating
-                      value={formData.customerSatisfaction}
-                      onChange={(rating) => setFormData(prev => ({ ...prev, customerSatisfaction: rating }))}
-                    />
-                  </div>
-                </>
-              )}
-
-              {entryType === EntryType.PRODUCT_KNOWLEDGE && (
-                <div>
-                  <label htmlFor="knowledgeContent" className="block text-sm font-medium text-gray-700 mb-2">
-                    Knowledge Content
-                  </label>
-                  <textarea
-                    id="knowledgeContent"
-                    name="knowledgeContent"
-                    value={formData.knowledgeContent}
-                    onChange={handleInputChange}
-                    rows={6}
-                    className="block w-full px-4 py-3 rounded-lg border border-gray-200 input-focus transition-colors"
-                    required
-                  />
-                </div>
-              )}
-
-              {entryType === EntryType.PROCESS && (
-                <div>
-                  <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-                    Description
-                  </label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    rows={6}
-                    className="block w-full px-4 py-3 rounded-lg border border-gray-200 input-focus transition-colors"
-                    required
-                  />
-                </div>
-              )}
-            </div>
-
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 text-sm font-medium btn-secondary rounded-lg"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="px-4 py-2 text-sm font-medium btn-primary rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isLoading ? 'Saving...' : 'Save Changes'}
-              </button>
-            </div>
-          </form>
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                    type="button"
+                    onClick={onClose}
+                    className="px-4 py-2 text-sm font-medium btn-secondary rounded-lg"
+                >
+                  Cancel
+                </button>
+                <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="px-4 py-2 text-sm font-medium btn-primary rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
   );
 }

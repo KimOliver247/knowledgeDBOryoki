@@ -18,62 +18,62 @@ export function Layout({ children, currentUser, isAdmin, activeView, onNavigate,
   ];
 
   return (
-    <div className="min-h-screen flex bg-stone-50">
-      {/* Sidebar */}
-      <div className="w-64 flex-shrink-0 bg-white border-r border-gray-200">
-        <div className="h-full flex flex-col">
-          {/* Logo */}
-          <div className="p-6">
-            <img
-              src="https://oryoki.de/bilder/intern/shoplogo/oryoki-logo.png"
-              alt="ORYOKI Logo"
-              className="h-8"
-            />
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 px-4 space-y-1">
-            {menuItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => onNavigate(item.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-                    activeView === item.id
-                      ? 'bg-[#59140b] text-white'
-                      : 'text-gray-700 hover:bg-stone-100'
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  {item.label}
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* User section */}
-          <div className="p-4 border-t border-gray-200">
-            <div className="mb-4 text-sm font-medium text-gray-700">
-              {currentUser}
+      <div className="min-h-screen flex bg-stone-50 dark:bg-gray-900">
+        {/* Sidebar */}
+        <div className="w-64 flex-shrink-0 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
+          <div className="h-full flex flex-col">
+            {/* Logo */}
+            <div className="p-6">
+              <img
+                  src="https://oryoki.de/bilder/intern/shoplogo/oryoki-logo.png"
+                  alt="ORYOKI Logo"
+                  className="h-8"
+              />
             </div>
-            <button
-              onClick={onLogout}
-              className="w-full flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg text-red-600 hover:bg-red-50 transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              Logout
-            </button>
+
+            {/* Navigation */}
+            <nav className="flex-1 px-4 space-y-1">
+              {menuItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                    <button
+                        key={item.id}
+                        onClick={() => onNavigate(item.id)}
+                        className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                            activeView === item.id
+                                ? 'bg-[#59140b] text-white'
+                                : 'text-gray-700 dark:text-gray-300 hover:bg-stone-100 dark:hover:bg-gray-700'
+                        }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                      {item.label}
+                    </button>
+                );
+              })}
+            </nav>
+
+            {/* User section */}
+            <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="mb-4 text-sm font-medium text-gray-700 dark:text-gray-300">
+                {currentUser}
+              </div>
+              <button
+                  onClick={onLogout}
+                  className="w-full flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                Logout
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col min-h-screen">
-        <main className="flex-1 py-12 px-8">
-          {children}
-        </main>
+        {/* Main content */}
+        <div className="flex-1 flex flex-col min-h-screen">
+          <main className="flex-1 py-12 px-8">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
   );
 }

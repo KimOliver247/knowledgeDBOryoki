@@ -230,7 +230,7 @@ export function SearchEntries() {
 
   return (
       <>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
           <div className="space-y-6">
             {/* First row with justified content */}
             <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
@@ -243,7 +243,7 @@ export function SearchEntries() {
                         className={`group flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${
                             selectedType === type.id
                                 ? 'bg-[#59140b] text-white border-[#59140b]'
-                                : 'border-gray-200 hover:border-[#59140b] text-gray-600 hover:text-[#59140b]'
+                                : 'border-gray-200 dark:border-gray-600 hover:border-[#59140b] text-gray-600 dark:text-gray-300 hover:text-[#59140b] dark:hover:text-[#ff8b7e]'
                         }`}
                     >
                       <span>{type.label}</span>
@@ -258,7 +258,7 @@ export function SearchEntries() {
                     className={`group flex items-center gap-2 px-4 py-2 rounded-lg border transition-all duration-200 ${
                         showDraftsOnly
                             ? 'bg-[#59140b] text-white border-[#59140b]'
-                            : 'border-gray-200 hover:border-[#59140b] text-gray-600 hover:text-[#59140b]'
+                            : 'border-gray-200 dark:border-gray-600 hover:border-[#59140b] text-gray-600 dark:text-gray-300 hover:text-[#59140b] dark:hover:text-[#ff8b7e]'
                     }`}
                 >
                   <Save className="w-4 h-4"/>
@@ -273,7 +273,7 @@ export function SearchEntries() {
               <select
                   value={selectedUser || ''}
                   onChange={(e) => setSelectedUser(e.target.value || null)}
-                  className="px-4 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#59140b]/20 transition-colors"
+                  className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#59140b]/20 transition-colors"
               >
                 <option value="">All Users</option>
                 {users.map((user) => (
@@ -292,7 +292,7 @@ export function SearchEntries() {
                       className={`group flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all duration-200 ${
                           selectedTopics.includes(topic.name)
                               ? 'bg-[#59140b] text-white border-[#59140b]'
-                              : 'border-gray-200 hover:border-[#59140b] text-gray-600 hover:text-[#59140b]'
+                              : 'border-gray-200 dark:border-gray-600 hover:border-[#59140b] text-gray-600 dark:text-gray-300 hover:text-[#59140b] dark:hover:text-[#ff8b7e]'
                       }`}
                   >
                     <span>{topic.name}</span>
@@ -302,41 +302,41 @@ export function SearchEntries() {
                   </button>
               ))}
               {availableTopics.length === 0 && (
-                  <p className="text-sm text-gray-500">No topics available for the selected filters</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">No topics available for the selected filters</p>
               )}
             </div>
 
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400"/>
+                <Search className="h-5 w-5 text-gray-400 dark:text-gray-500"/>
               </div>
               <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="block w-full pl-12 pr-4 py-3 border border-gray-200 rounded-lg input-focus transition-colors"
+                  className="block w-full pl-12 pr-4 py-3 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg input-focus transition-colors"
                   placeholder="Search entries by heading or topic..."
               />
             </div>
           </div>
 
           <div className="flow-root mt-8">
-            <ul role="list" className="-my-6 divide-y divide-gray-100">
+            <ul role="list" className="-my-6 divide-y divide-gray-100 dark:divide-gray-700">
               {filteredEntries.map((entry) => (
-                  <li key={entry.id} className="py-6 group hover:bg-stone-50 -mx-8 px-8 transition-colors">
+                  <li key={entry.id} className="py-6 group hover:bg-stone-50 dark:hover:bg-gray-700/50 -mx-8 px-8 transition-colors">
                     <div className="flex items-center space-x-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3">
-                    <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getEntryTypeIcon(
-                            entry.type
-                        )}`}
-                    >
-                      {entry.type.replace('_', ' ').toUpperCase()}
-                    </span>
+                          <span
+                              className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#59140b] dark:bg-[#59140b]/50 dark:text-white ${getEntryTypeIcon(
+                                  entry.type
+                              )}`}
+                          >
+                            {entry.type.replace('_', ' ').toUpperCase()}
+                          </span>
                           <div className="flex items-center gap-2">
-                            <Clock className="w-3 h-3 text-gray-500"/>
-                            <p className="text-sm text-gray-500">
+                            <Clock className="w-3 h-3 text-gray-500 dark:text-gray-400"/>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
                               Created: {formatDate(entry.created_at)}
                               {entry.last_modified_at && (
                                   <span className="ml-2">• Modified: {formatDate(entry.last_modified_at)}</span>
@@ -344,55 +344,51 @@ export function SearchEntries() {
                             </p>
                           </div>
                           {entry.status === 'draft' && (
-                              <span
-                                  className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                        <Save className="w-3 h-3"/>
-                        Draft
-                      </span>
+                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                                <Save className="w-3 h-3"/>
+                                Draft
+                              </span>
                           )}
                           {entry.is_frequent && (
-                              <span
-                                  className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
-                        <BarChart2 className="w-3 h-3"/>
-                        Frequent
-                      </span>
+                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
+                                <BarChart2 className="w-3 h-3"/>
+                                Frequent
+                              </span>
                           )}
                           {entry.needs_improvement && (
-                              <span
-                                  className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700">
-                        <AlertTriangle className="w-3 h-3"/>
-                        Needs Improvement
-                      </span>
+                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
+                                <AlertTriangle className="w-3 h-3"/>
+                                Needs Improvement
+                              </span>
                           )}
-                          <span
-                              className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                      <User className="w-3 h-3"/>
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                            <User className="w-3 h-3"/>
                             {entry.author?.username || 'Unknown'}
-                    </span>
+                          </span>
                         </div>
-                        <p className="text-lg font-medium text-gray-900 mt-2">{entry.heading}</p>
+                        <p className="text-lg font-medium text-gray-900 dark:text-white mt-2">{entry.heading}</p>
                         <div className="flex flex-wrap gap-2 mt-3">
                           {entry.topics.map(({topics: {name}}, index) => (
                               <span
                                   key={`${entry.id}-${name}-${index}`}
-                                  className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium tag"
+                                  className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium tag dark:bg-gray-700 dark:text-gray-300"
                               >
-                        {name}
-                      </span>
+                                {name}
+                              </span>
                           ))}
                         </div>
                       </div>
                       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
                             onClick={() => setViewingEntryId(entry.id)}
-                            className="p-2 text-gray-400 hover:text-[#59140b] rounded-lg transition-colors"
+                            className="p-2 text-gray-400 dark:text-gray-500 hover:text-[#59140b] dark:hover:text-[#ff8b7e] rounded-lg transition-colors"
                             title="View entry"
                         >
                           <Eye className="w-5 h-5"/>
                         </button>
                         <button
                             onClick={() => setEditingEntryId(entry.id)}
-                            className="p-2 text-gray-400 hover:text-[#59140b] rounded-lg transition-colors"
+                            className="p-2 text-gray-400 dark:text-gray-500 hover:text-[#59140b] dark:hover:text-[#ff8b7e] rounded-lg transition-colors"
                             title="Edit entry"
                         >
                           <Edit className="w-5 h-5"/>
@@ -403,7 +399,7 @@ export function SearchEntries() {
                                 handleDelete(entry.id, entry.type);
                               }
                             }}
-                            className="p-2 text-gray-400 hover:text-red-500 rounded-lg transition-colors"
+                            className="p-2 text-gray-400 dark:text-gray-500 hover:text-red-500 rounded-lg transition-colors"
                             title="Delete entry"
                         >
                           <Trash2 className="w-5 h-5"/>
@@ -414,7 +410,7 @@ export function SearchEntries() {
               ))}
               {filteredEntries.length === 0 && (
                   <li className="py-12">
-                    <div className="text-center text-gray-500">
+                    <div className="text-center text-gray-500 dark:text-gray-400">
                       {entries.length === 0 ? (
                           <p>No entries found. Start by creating a new entry.</p>
                       ) : (
