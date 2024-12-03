@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Eye, Edit, Loader2, X, AlertTriangle, BarChart2, Save, User, Trash2 } from 'lucide-react';
+import { Search, Eye, Edit, Loader2, X, AlertTriangle, BarChart2, Save, User, Trash2, RotateCcw  } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { EntryType, Topic } from '../types';
 import { EditEntryModal } from './EditEntryModal';
@@ -44,7 +44,13 @@ export function SearchEntries() {
   const [viewingEntryId, setViewingEntryId] = useState<string | null>(null);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [users, setUsers] = useState<Array<{ id: string, username: string }>>([]);
-
+  const resetFilters = () => {
+    setSearchQuery('');
+    setSelectedTopics([]);
+    setSelectedType(null);
+    setShowDraftsOnly(false);
+    setSelectedUser(null);
+  };
   useEffect(() => {
     fetchEntries();
     fetchTopics();
@@ -267,6 +273,13 @@ export function SearchEntries() {
                       <X className="w-4 h-4 opacity-50 group-hover:opacity-100"/>
                   )}
                 </button>
+                <button
+                    onClick={resetFilters}
+                    className="group flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-[#59140b] text-gray-600 dark:text-gray-300 hover:text-[#59140b] dark:hover:text-[#ff8b7e] transition-all duration-200"
+                >
+                  <RotateCcw className="w-4 h-4"/>
+                  <span>Reset Filters</span>
+                </button>
               </div>
 
               {/* Right-aligned user dropdown */}
@@ -399,7 +412,7 @@ export function SearchEntries() {
                                 handleDelete(entry.id, entry.type);
                               }
                             }}
-                            className="p-2 text-gray-400 dark:text-gray-500 hover:text-red-500 rounded-lg transition-colors"
+                            className="p-2 text-gray-400 dark:text-gray-500 hover:text-[#59140b] rounded-lg dark:hover:text-[#ff8b7e] transition-colors"
                             title="Delete entry"
                         >
                           <Trash2 className="w-5 h-5"/>
