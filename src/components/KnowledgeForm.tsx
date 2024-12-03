@@ -10,6 +10,11 @@ import { PlusCircle, X, AlertTriangle, BarChart2, Lightbulb, Save, Send } from '
 import { log, LogLevel } from '../lib/logger';
 import { getCurrentUser } from '../lib/auth';
 import toast from 'react-hot-toast';
+import { useTheme } from '../hooks/useTheme';
+
+interface KnowledgeFormProps {
+  showDraftsOnly: boolean;
+}
 
 const initialFormData: FormData = {
   topics: [],
@@ -24,13 +29,14 @@ const initialFormData: FormData = {
   status: 'draft'
 };
 
-export function KnowledgeForm() {
+export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [entryType, setEntryType] = useState<EntryType>(EntryType.SUPPORT_CASE);
   const [isLoading, setIsLoading] = useState(false);
   const [showImprovements, setShowImprovements] = useState(false);
   const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null);
+  const { isDarkMode } = useTheme();
 
   useEffect(() => {
     fetchCurrentUser();
@@ -59,26 +65,23 @@ export function KnowledgeForm() {
       is_frequent: formData.isFrequent,
       needs_improvement: formData.needsImprovement,
       status,
-      created_by: currentUser.id  // Changed from author_id to created_by
+      created_by: currentUser.id
     };
 
     setIsLoading(true);
     try {
       await log(LogLevel.INFO, 'Creating new entry');
 
-      // First create the main entry
       const { data: entryData, error: entryError } = await supabase
-          .from('entries')
-          .insert([entryToCreate])
-          .select()
-          .single();
+        .from('entries')
+        .insert([entryToCreate])
+        .select()
+        .single();
 
       if (entryError) throw entryError;
 
-
-      // Then create the type-specific entry using the SAME ID
       const specificData = {
-        id: entryData.id, // Make sure to use the same ID!
+        id: entryData.id,
         ...(entryType === EntryType.SUPPORT_CASE && {
           problem: formData.problem,
           solution: formData.solution,
@@ -92,50 +95,47 @@ export function KnowledgeForm() {
         })
       };
 
-
       const { data: specificEntryData, error: specificError } = await supabase
-          .from(entryType)
-          .insert([specificData])
-          .select()
-          .single();
+        .from(entryType)
+        .insert([specificData])
+        .select()
+        .single();
 
       if (specificError) {
         console.error('Error creating specific entry:', specificError);
-        // Cleanup the main entry if specific entry creation fails
         await supabase.from('entries').delete().eq('id', entryData.id);
         throw specificError;
       }
 
-      // Handle topics
       for (const topicName of formData.topics) {
         const { data: topicData, error: topicError } = await supabase
-            .from('topics')
-            .select('id')
-            .eq('name', topicName)
-            .single();
+          .from('topics')
+          .select('id')
+          .eq('name', topicName)
+          .single();
 
         if (topicError) {
           const { data: newTopic, error: createError } = await supabase
-              .from('topics')
-              .insert([{ name: topicName }])
-              .select()
-              .single();
+            .from('topics')
+            .insert([{ name: topicName }])
+            .select()
+            .single();
 
           if (createError) throw createError;
 
           await supabase
-              .from('entry_topics')
-              .insert([{
-                entry_id: entryData.id,
-                topic_id: newTopic.id
-              }]);
+            .from('entry_topics')
+            .insert([{
+              entry_id: entryData.id,
+              topic_id: newTopic.id
+            }]);
         } else {
           await supabase
-              .from('entry_topics')
-              .insert([{
-                entry_id: entryData.id,
-                topic_id: topicData.id
-              }]);
+            .from('entry_topics')
+            .insert([{
+              entry_id: entryData.id,
+              topic_id: topicData.id
+            }]);
         }
       }
 
@@ -155,14 +155,18 @@ export function KnowledgeForm() {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="flex justify-end items-center gap-3 mb-12">
-        <button
-          onClick={() => setShowImprovements(true)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg bg-amber-600 text-white hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors"
-        >
-          <Lightbulb className="w-4 h-4" />
-          Improvements
-        </button>
-        <ExportButton />
+        {!showDraftsOnly && (
+          <>
+            <button
+              onClick={() => setShowImprovements(true)}
+              className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg bg-amber-600 text-white hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors dark:bg-amber-700 dark:hover:bg-amber-600"
+            >
+              <Lightbulb className="w-4 h-4" />
+              Improvements
+            </button>
+            <ExportButton />
+          </>
+        )}
         <button
           onClick={() => setShowForm(!showForm)}
           className={`inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 ${
@@ -184,11 +188,11 @@ export function KnowledgeForm() {
       </div>
 
       {showForm ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 mb-8 transition-all duration-300">
+        <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 mb-8 transition-all duration-300`}>
           <form onSubmit={(e) => e.preventDefault()} className="space-y-8">
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
               <div>
-                <label htmlFor="entryType" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="entryType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Entry Type
                 </label>
                 <select
@@ -204,7 +208,7 @@ export function KnowledgeForm() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Topics</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Topics</label>
                 <TopicMultiSelect
                   selectedTopics={formData.topics}
                   onChange={(topics) => setFormData(prev => ({ ...prev, topics }))}
@@ -213,7 +217,7 @@ export function KnowledgeForm() {
             </div>
 
             <div>
-              <label htmlFor="heading" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="heading" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Heading
               </label>
               <input
@@ -235,8 +239,8 @@ export function KnowledgeForm() {
                   checked={formData.isFrequent}
                   onChange={(e) => setFormData(prev => ({ ...prev, isFrequent: e.target.checked }))}
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#59140b]/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#59140b]"></div>
-                <span className="ms-3 text-sm font-medium text-gray-900 flex items-center gap-2">
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#59140b]/20 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#59140b]"></div>
+                <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
                   <BarChart2 className="w-4 h-4" />
                   Occurs Frequently
                 </span>
@@ -249,8 +253,8 @@ export function KnowledgeForm() {
                   checked={formData.needsImprovement}
                   onChange={(e) => setFormData(prev => ({ ...prev, needsImprovement: e.target.checked }))}
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#59140b]/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#59140b]"></div>
-                <span className="ms-3 text-sm font-medium text-gray-900 flex items-center gap-2">
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#59140b]/20 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#59140b]"></div>
+                <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4" />
                   Needs Improvement
                 </span>
@@ -260,7 +264,7 @@ export function KnowledgeForm() {
             {entryType === EntryType.SUPPORT_CASE && (
               <>
                 <div>
-                  <label htmlFor="problem" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="problem" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Problem
                   </label>
                   <textarea
@@ -274,7 +278,7 @@ export function KnowledgeForm() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="solution" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="solution" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Solution
                   </label>
                   <textarea
@@ -288,7 +292,7 @@ export function KnowledgeForm() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Customer Satisfaction
                   </label>
                   <StarRating
@@ -301,7 +305,7 @@ export function KnowledgeForm() {
 
             {entryType === EntryType.PRODUCT_KNOWLEDGE && (
               <div>
-                <label htmlFor="knowledgeContent" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="knowledgeContent" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Knowledge Content
                 </label>
                 <textarea
@@ -318,7 +322,7 @@ export function KnowledgeForm() {
 
             {entryType === EntryType.PROCESS && (
               <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Description
                 </label>
                 <textarea
@@ -356,7 +360,7 @@ export function KnowledgeForm() {
           </form>
         </div>
       ) : (
-        <SearchEntries />
+        <SearchEntries showDraftsOnly={showDraftsOnly} />
       )}
 
       <ImprovementsModal
