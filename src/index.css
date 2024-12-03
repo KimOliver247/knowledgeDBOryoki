@@ -21,7 +21,7 @@
 }
 
 .input-focus {
-  @apply focus:ring-[#59140b] focus:border-[#59140b];
+  @apply border-2 border-gray-200 focus:ring-2 focus:ring-[#59140b] focus:border-[#59140b] transition-colors;
 }
 
 .tag {
