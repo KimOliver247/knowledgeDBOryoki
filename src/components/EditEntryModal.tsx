@@ -33,8 +33,12 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
   const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null);
 
   const handleConvertToPub = async (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent form submission
+    e.preventDefault(); // Prevent default behavior
     try {
+      // Save the changes first
+      await handleSubmit(e);
+
+      // Then proceed with converting the status
       const { error } = await supabase
           .from('entries')
           .update({ status: 'published' })
@@ -52,8 +56,12 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
   };
 
   const handleConvertToDraft = async (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent form submission
+    e.preventDefault(); // Prevent default behavior
     try {
+      // Save the changes first
+      await handleSubmit(e);
+
+      // Then proceed with converting the status
       const { error } = await supabase
           .from('entries')
           .update({ status: 'draft' })
@@ -69,7 +77,6 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
       toast.error('Failed to convert entry to draft');
     }
   };
-
   useEffect(() => {
     fetchCurrentUser();
   }, []);
