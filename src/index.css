@@ -8,26 +8,29 @@
   }
 
   body {
-    @apply bg-stone-50;
+    @apply bg-stone-50 dark:bg-gray-900;
   }
 }
 
 .btn-primary {
-  @apply bg-[#59140b] hover:bg-[#6b1a0f] text-white transition-colors;
+  @apply bg-[#59140b] hover:bg-[#6b1a0f] text-white transition-colors dark:bg-[#59140b]/80 dark:hover:bg-[#6b1a0f]/80;
 }
 
 .btn-secondary {
-  @apply border border-[#59140b] text-[#59140b] hover:bg-[#59140b] hover:text-white transition-colors;
+  @apply border border-[#59140b] text-[#59140b] hover:bg-[#59140b] hover:text-white transition-colors dark:border-[#59140b]/80 dark:text-[#59140b]/80 dark:hover:bg-[#59140b]/80;
+}
+.btn-secondary {
+  @apply border border-[#59140b] dark:border-[#ff8b7e] text-[#59140b] dark:text-white hover:bg-[#59140b] hover:text-white dark:hover:bg-[#ff8b7e] dark:hover:text-gray-900 transition-colors;
 }
 
 .input-focus {
-  @apply border-2 border-gray-200 focus:ring-2 focus:ring-[#59140b] focus:border-[#59140b] transition-colors;
+  @apply focus:ring-[#59140b] focus:border-[#59140b] dark:focus:ring-[#59140b]/80 dark:focus:border-[#59140b]/80;
 }
 
 .tag {
-  @apply bg-[#59140b]/10 text-[#59140b];
+  @apply bg-[#59140b]/10 text-[#59140b] dark:bg-[#59140b]/20 dark:text-[#59140b]/80;
 }
 
 .modal-overlay {
-  @apply bg-black/40 backdrop-blur-sm;
+  @apply bg-black/40 backdrop-blur-sm dark:bg-black/60;
 }

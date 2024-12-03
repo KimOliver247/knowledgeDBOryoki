@@ -160,125 +160,122 @@ export function ViewEntryModal({ entryId, isOpen, onClose }: ViewEntryModalProps
   if (!isOpen || !entry) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div className="fixed inset-0 transition-opacity modal-overlay" onClick={onClose} />
+      <div className="fixed inset-0 z-50 overflow-y-auto">
+        <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+          <div className="fixed inset-0 transition-opacity modal-overlay" onClick={onClose} />
 
-        <div className="inline-block w-full max-w-4xl my-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded-xl shadow-xl">
-          {isLoading ? (
-            <div className="p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#59140b] mx-auto"></div>
-            </div>
-          ) : (
-              <div className="relative">
-                <div className="px-8 py-6 border-b border-gray-100">
-                  <div className="pr-8">
-                    <div className="flex items-center gap-3 mb-4">
-      <span
-          className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#59140b]/10 text-[#59140b]">
-        {entry.type.replace('_', ' ').toUpperCase()}
-      </span>
-                      {entry.status === 'draft' && (
-                          <span
-                              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-          DRAFT
-        </span>
+          <div className="inline-block w-full max-w-4xl my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-gray-800 rounded-xl shadow-xl">
+            {isLoading ? (
+                <div className="p-8 text-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#59140b] dark:border-[#ff8b7e] mx-auto"></div>
+                </div>
+            ) : (
+                <div className="relative">
+                  <div className="px-8 py-6 border-b border-gray-100 dark:border-gray-700">
+                    <div className="pr-8">
+                      <div className="flex items-center gap-3 mb-4">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#59140b]/10 dark:bg-[#59140b]/50 text-[#59140b] dark:text-white">
+                        {entry.type.replace('_', ' ').toUpperCase()}
+                      </span>
+                        {entry.status === 'draft' && (
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                            DRAFT
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-2xl font-light text-gray-900 dark:text-white">{entry.heading}</h3>
+
+                      <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4"/>
+                          <span>Created on {formatDate(entry.created_at)}</span>
+                          <span className="mx-2">by</span>
+                          <User className="w-4 h-4"/>
+                          <span>{entry.author?.username || 'Unknown'}</span>
+                        </div>
+                      </div>
+
+                      {entry.last_modified_at && (
+                          <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                            <div className="flex items-center gap-2">
+                              <Clock className="w-4 h-4"/>
+                              <span>Modified on {formatDate(entry.last_modified_at)}</span>
+                              <span className="mx-2">by</span>
+                              <User className="w-4 h-4"/>
+                              <span>{entry.last_modified_by?.username || 'Unknown'}</span>
+                            </div>
+                          </div>
                       )}
-                    </div>
-                    <h3 className="text-2xl font-light text-gray-900">{entry.heading}</h3>
 
-                    {/* First row: Creation information */}
-                    <div className="mt-4 text-sm text-gray-500">
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4"/>
-                        <span>Created on {formatDate(entry.created_at)}</span>
-                        <span className="mx-2">by</span>
-                        <User className="w-4 h-4"/>
-                        <span>{entry.author?.username || 'Unknown'}</span>
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {entry.topics?.map(({topics: {name}}, index) => (
+                            <span
+                                key={`${entry.id}-${name}-${index}`}
+                                className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium tag dark:bg-gray-700 dark:text-gray-300"
+                            >
+                            {name}
+                          </span>
+                        ))}
                       </div>
                     </div>
+                    <button
+                        onClick={onClose}
+                        className="absolute top-6 right-6 text-gray-400 dark:text-gray-500 hover:text-[#59140b] dark:hover:text-[#ff8b7e] transition-colors"
+                    >
+                      <X className="w-6 h-6"/>
+                    </button>
+                  </div>
 
-                    {/* Second row: Modification information (if exists) */}
-                    {entry.last_modified_at && (
-                        <div className="mt-2 text-sm text-gray-500">
-                          <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4"/>
-                            <span>Modified on {formatDate(entry.last_modified_at)}</span>
-                            <span className="mx-2">by</span>
-                            <User className="w-4 h-4"/>
-                            <span>{entry.last_modified_by?.username || 'Unknown'}</span>
+                  <div className="p-8">
+                    {entry.type === EntryType.SUPPORT_CASE && entry.support_case && (
+                        <>
+                          <div className="mb-6">
+                            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Problem</h4>
+                            <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg">
+                              <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{entry.support_case.problem}</p>
+                            </div>
+                          </div>
+                          <div className="mb-6">
+                            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Solution</h4>
+                            <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg">
+                              <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{entry.support_case.solution}</p>
+                            </div>
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Customer Satisfaction</h4>
+                            <StarRating
+                                value={entry.support_case.customer_satisfaction}
+                                onChange={() => {}}
+                                disabled
+                            />
+                          </div>
+                        </>
+                    )}
+
+                    {entry.type === EntryType.PRODUCT_KNOWLEDGE && entry.product_knowledge && (
+                        <div>
+                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Content</h4>
+                          <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg">
+                            <p className="text-gray-900 dark:text-white whitespace-pre-wrap">
+                              {entry.product_knowledge.knowledge_content}
+                            </p>
                           </div>
                         </div>
                     )}
 
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {entry.topics?.map(({topics: {name}}, index) => (
-                          <span
-                              key={`${entry.id}-${name}-${index}`}
-                              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium tag"
-                          >
-          {name}
-        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <button
-                      onClick={onClose}
-                      className="absolute top-6 right-6 text-gray-400 hover:text-[#59140b] transition-colors"
-                  >
-                    <X className="w-6 h-6"/>
-                  </button>
-                </div>
-
-                <div className="p-8">
-                  {entry.type === EntryType.SUPPORT_CASE && entry.support_case && (
-                      <>
-                        <div className="mb-6">
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">Problem</h4>
-                          <div className="p-4 bg-stone-50 rounded-lg">
-                            <p className="text-gray-900 whitespace-pre-wrap">{entry.support_case.problem}</p>
-                          </div>
-                        </div>
-                        <div className="mb-6">
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">Solution</h4>
-                          <div className="p-4 bg-stone-50 rounded-lg">
-                            <p className="text-gray-900 whitespace-pre-wrap">{entry.support_case.solution}</p>
-                          </div>
-                        </div>
+                    {entry.type === EntryType.PROCESS && entry.process && (
                         <div>
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">Customer Satisfaction</h4>
-                          <StarRating
-                              value={entry.support_case.customer_satisfaction}
-                              onChange={() => {
-                              }}
-                              disabled
-                          />
+                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</h4>
+                          <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg">
+                            <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{entry.process.description}</p>
+                          </div>
                         </div>
-                      </>
-                  )}
-
-                  {entry.type === EntryType.PRODUCT_KNOWLEDGE && entry.product_knowledge && (
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">Content</h4>
-                        <div className="p-4 bg-stone-50 rounded-lg">
-                          <p className="text-gray-900 whitespace-pre-wrap">{entry.product_knowledge.knowledge_content}</p>
-                        </div>
-                      </div>
-                  )}
-
-                  {entry.type === EntryType.PROCESS && entry.process && (
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">Description</h4>
-                        <div className="p-4 bg-stone-50 rounded-lg">
-                          <p className="text-gray-900 whitespace-pre-wrap">{entry.process.description}</p>
-                        </div>
-                      </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
-    </div>
   );
 }
