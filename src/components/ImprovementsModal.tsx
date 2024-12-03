@@ -115,83 +115,83 @@ export function ImprovementsModal({ isOpen, onClose, onCreateEntry }: Improvemen
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div className="fixed inset-0 transition-opacity modal-overlay" onClick={onClose} />
+      <div className="fixed inset-0 z-50 overflow-y-auto">
+        <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+          <div className="fixed inset-0 transition-opacity modal-overlay bg-black/50" onClick={onClose} />
 
-        <div className="inline-block w-full max-w-4xl my-8 overflow-hidden text-left align-middle transition-all transform bg-white rounded-xl shadow-xl">
-          <div className="flex items-center justify-between px-6 py-4 border-b">
-            <h3 className="text-lg font-medium text-gray-900">Suggested Improvements</h3>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-gray-500 focus:outline-none"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </div>
+          <div className="inline-block w-full max-w-4xl my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-gray-800 rounded-xl shadow-xl">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">Suggested Improvements</h3>
+              <button
+                  onClick={onClose}
+                  className="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
 
-          <div className="px-6 py-4">
-            {isLoading ? (
-              <div className="flex justify-center py-8">
-                <Loader2 className="w-8 h-8 animate-spin text-[#59140b]" />
-              </div>
-            ) : error ? (
-              <div className="text-center py-8 text-red-500">
-                {error}
-              </div>
-            ) : improvements.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                No improvements available
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {improvements.map((improvement) => (
-                  <div
-                    key={improvement.id}
-                    className="bg-white rounded-lg border border-gray-200 p-6 hover:border-[#59140b]/20 transition-colors"
-                  >
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h4 className="text-lg font-medium text-gray-900 mb-1">
-                          {improvement.question}
-                        </h4>
-                        <p className="text-sm text-gray-500">
-                          Added on {formatDate(improvement.created_at)}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => handleDelete(improvement.id)}
-                          disabled={deletingId === improvement.id}
-                          className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          {deletingId === improvement.id ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : (
-                            <Trash2 className="w-4 h-4" />
-                          )}
-                          Delete
-                        </button>
-                        <button
-                          onClick={() => handleCreateEntry(improvement)}
-                          disabled={deletingId === improvement.id}
-                          className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          <Plus className="w-4 h-4" />
-                          Convert to Entry
-                        </button>
-                      </div>
-                    </div>
-                    <p className="text-gray-700 whitespace-pre-wrap">
-                      {improvement.answer}
-                    </p>
+            <div className="px-6 py-4">
+              {isLoading ? (
+                  <div className="flex justify-center py-8">
+                    <Loader2 className="w-8 h-8 animate-spin text-[#59140b] dark:text-[#ff8b7e]" />
                   </div>
-                ))}
-              </div>
-            )}
+              ) : error ? (
+                  <div className="text-center py-8 text-red-500 dark:text-red-400">
+                    {error}
+                  </div>
+              ) : improvements.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                    No improvements available
+                  </div>
+              ) : (
+                  <div className="space-y-6">
+                    {improvements.map((improvement) => (
+                        <div
+                            key={improvement.id}
+                            className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:border-[#59140b]/20 dark:hover:border-[#ff8b7e]/20 transition-colors"
+                        >
+                          <div className="flex justify-between items-start mb-4">
+                            <div>
+                              <h4 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
+                                {improvement.question}
+                              </h4>
+                              <p className="text-sm text-gray-500 dark:text-gray-400">
+                                Added on {formatDate(improvement.created_at)}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <button
+                                  onClick={() => handleDelete(improvement.id)}
+                                  disabled={deletingId === improvement.id}
+                                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                {deletingId === improvement.id ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : (
+                                    <Trash2 className="w-4 h-4" />
+                                )}
+                                Delete
+                              </button>
+                              <button
+                                  onClick={() => handleCreateEntry(improvement)}
+                                  disabled={deletingId === improvement.id}
+                                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg btn-primary dark:bg-[#59140b] dark:text-white dark:hover:bg-[#59140b]/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                <Plus className="w-4 h-4" />
+                                Convert to Entry
+                              </button>
+                            </div>
+                          </div>
+                          <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                            {improvement.answer}
+                          </p>
+                        </div>
+                    ))}
+                  </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
   );
 }

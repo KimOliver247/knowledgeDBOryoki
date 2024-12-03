@@ -17,9 +17,6 @@
 }
 
 .btn-secondary {
-  @apply border border-[#59140b] text-[#59140b] hover:bg-[#59140b] hover:text-white transition-colors dark:border-[#59140b]/80 dark:text-[#59140b]/80 dark:hover:bg-[#59140b]/80;
-}
-.btn-secondary {
   @apply border border-[#59140b] dark:border-[#ff8b7e] text-[#59140b] dark:text-white hover:bg-[#59140b] hover:text-white dark:hover:bg-[#ff8b7e] dark:hover:text-gray-900 transition-colors;
 }
 

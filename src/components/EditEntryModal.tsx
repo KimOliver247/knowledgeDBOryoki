@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { X, AlertTriangle, BarChart2 } from 'lucide-react';
+import React, { useState, useEffect, memo  } from 'react';
+import { X, AlertTriangle, BarChart2, Save, ArrowUpCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { FormData, EntryType } from '../types';
 import { TopicMultiSelect } from './TopicMultiSelect';
@@ -31,6 +31,44 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
   const [entryType, setEntryType] = useState<EntryType>(EntryType.SUPPORT_CASE);
   const [isLoading, setIsLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null);
+
+  const handleConvertToPub = async (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent form submission
+    try {
+      const { error } = await supabase
+          .from('entries')
+          .update({ status: 'published' })
+          .eq('id', entryId);
+
+      if (error) throw error;
+
+      toast.success('Entry successfully published');
+      onUpdate();
+      onClose();
+    } catch (error) {
+      console.error('Error publishing entry:', error);
+      toast.error('Failed to publish entry');
+    }
+  };
+
+  const handleConvertToDraft = async (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent form submission
+    try {
+      const { error } = await supabase
+          .from('entries')
+          .update({ status: 'draft' })
+          .eq('id', entryId);
+
+      if (error) throw error;
+
+      toast.success('Entry converted to draft');
+      onUpdate();
+      onClose();
+    } catch (error) {
+      console.error('Error converting to draft:', error);
+      toast.error('Failed to convert entry to draft');
+    }
+  };
 
   useEffect(() => {
     fetchCurrentUser();
@@ -208,7 +246,38 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
 
   if (!isOpen) return null;
 
+  const StatusButtons = memo(({ status, onPublish, onDraft }: {
+    status: 'draft' | 'published';
+    onPublish: () => (e: React.MouseEvent) => Promise<void>;
+    onDraft: (e: React.MouseEvent) => void;
+  }) => {
+    if (status === 'draft') {
+      return (
+          <button
+              type="button"
+              onClick={onPublish}
+              className="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 rounded-lg flex items-center gap-2"
+          >
+            <ArrowUpCircle className="w-4 h-4" />
+            Publish Entry
+          </button>
+      );
+    }
+
+    return (
+        <button
+            type="button"
+            onClick={onDraft}
+            className="px-4 py-2 text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-800 rounded-lg flex items-center gap-2"
+        >
+          <Save className="w-4 h-4" />
+          Convert to Draft
+        </button>
+    );
+  });
+
   return (
+
       <div className="fixed inset-0 z-50 overflow-y-auto">
         <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
           <div className="fixed inset-0 transition-opacity modal-overlay" onClick={onClose} />
@@ -230,7 +299,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Topics</label>
                   <TopicMultiSelect
                       selectedTopics={formData.topics}
-                      onChange={(topics) => setFormData(prev => ({ ...prev, topics }))}
+                      onChange={(topics) => setFormData(prev => ({...prev, topics}))}
                   />
                 </div>
 
@@ -255,11 +324,12 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                         type="checkbox"
                         className="sr-only peer"
                         checked={formData.isFrequent}
-                        onChange={(e) => setFormData(prev => ({ ...prev, isFrequent: e.target.checked }))}
+                        onChange={(e) => setFormData(prev => ({...prev, isFrequent: e.target.checked}))}
                     />
-                    <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#59140b]/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#59140b]"></div>
+                    <div
+                        className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#59140b]/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#59140b]"></div>
                     <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
-                    <BarChart2 className="w-4 h-4" />
+                    <BarChart2 className="w-4 h-4"/>
                     Occurs Frequently
                   </span>
                   </label>
@@ -269,11 +339,12 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                         type="checkbox"
                         className="sr-only peer"
                         checked={formData.needsImprovement}
-                        onChange={(e) => setFormData(prev => ({ ...prev, needsImprovement: e.target.checked }))}
+                        onChange={(e) => setFormData(prev => ({...prev, needsImprovement: e.target.checked}))}
                     />
-                    <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#59140b]/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#59140b]"></div>
+                    <div
+                        className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#59140b]/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#59140b]"></div>
                     <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4" />
+                    <AlertTriangle className="w-4 h-4"/>
                     Needs Improvement
                   </span>
                   </label>
@@ -282,7 +353,8 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                 {entryType === EntryType.SUPPORT_CASE && (
                     <>
                       <div>
-                        <label htmlFor="problem" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label htmlFor="problem"
+                               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           Problem
                         </label>
                         <textarea
@@ -296,7 +368,8 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                         />
                       </div>
                       <div>
-                        <label htmlFor="solution" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label htmlFor="solution"
+                               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           Solution
                         </label>
                         <textarea
@@ -315,7 +388,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                         </label>
                         <StarRating
                             value={formData.customerSatisfaction}
-                            onChange={(rating) => setFormData(prev => ({ ...prev, customerSatisfaction: rating }))}
+                            onChange={(rating) => setFormData(prev => ({...prev, customerSatisfaction: rating}))}
                         />
                       </div>
                     </>
@@ -323,7 +396,8 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
 
                 {entryType === EntryType.PRODUCT_KNOWLEDGE && (
                     <div>
-                      <label htmlFor="knowledgeContent" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label htmlFor="knowledgeContent"
+                             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Knowledge Content
                       </label>
                       <textarea
@@ -340,7 +414,8 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
 
                 {entryType === EntryType.PROCESS && (
                     <div>
-                      <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label htmlFor="description"
+                             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Description
                       </label>
                       <textarea
@@ -357,6 +432,11 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
               </div>
 
               <div className="mt-6 flex justify-end gap-3">
+                <StatusButtons
+                    status={formData.status}
+                    onPublish={handleConvertToPub}
+                    onDraft={handleConvertToDraft}
+                />
                 <button
                     type="button"
                     onClick={onClose}
@@ -377,4 +457,4 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
         </div>
       </div>
   );
-}
+  }
