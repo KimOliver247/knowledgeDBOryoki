@@ -9,6 +9,7 @@ export interface FormData {
   isFrequent: boolean;
   needsImprovement: boolean;
   status: 'draft' | 'published';
+  files: File[];
 }
 
 export enum EntryType {

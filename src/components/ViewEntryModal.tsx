@@ -5,6 +5,7 @@ import { EntryType } from '../types';
 import { StarRating } from './StarRating';
 import { log, LogLevel } from '../lib/logger';
 import toast from 'react-hot-toast';
+import {ViewImages} from "./ViewImages.tsx";
 
 interface ViewEntryModalProps {
   entryId: string;
@@ -45,6 +46,11 @@ interface EntryData {
   process?: {
     description: string;
   };
+  images: Array<{
+    id: string;
+    file_path: string;
+    created_at: string;
+  }>;
 }
 
 export function ViewEntryModal({ entryId, isOpen, onClose }: ViewEntryModalProps) {
@@ -78,7 +84,8 @@ export function ViewEntryModal({ entryId, isOpen, onClose }: ViewEntryModalProps
           last_modified_at,
           author:kb_users!entries_created_by_fkey(id, username),
           last_modified_by:kb_users!entries_last_modified_by_fkey(id, username),
-          topics:entry_topics(topics(name))
+          topics:entry_topics(topics(name)),
+          images:entry_images(id, file_path, created_at)
         `)
           .eq('id', entryId)
           .single();
@@ -272,7 +279,11 @@ export function ViewEntryModal({ entryId, isOpen, onClose }: ViewEntryModalProps
                         </div>
                     )}
                   </div>
+                  {entry.images && entry.images.length > 0 && (
+                      <ViewImages images={entry.images} entryId={entry.id} />
+                  )}
                 </div>
+
             )}
           </div>
         </div>
