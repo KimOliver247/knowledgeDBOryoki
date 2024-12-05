@@ -7,6 +7,7 @@ import { StarRating } from './StarRating';
 import { log, LogLevel } from '../lib/logger';
 import { getCurrentUser } from '../lib/auth';
 import toast from 'react-hot-toast';
+import {EditImages} from "./EditImages.tsx";
 
 interface EditEntryModalProps {
   entryId: string;
@@ -14,8 +15,13 @@ interface EditEntryModalProps {
   onClose: () => void;
   onUpdate: () => void;
 }
-
+interface ImageData {
+  id: string;
+  file_path: string;
+  created_at: string;
+}
 export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntryModalProps) {
+  const [images, setImages] = useState<ImageData[]>([]);
   const [formData, setFormData] = useState<FormData>({
     topics: [],
     heading: '',
@@ -26,7 +32,8 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
     description: '',
     isFrequent: false,
     needsImprovement: false,
-    status: 'published'
+    status: 'published',
+    files: []
   });
   const [entryType, setEntryType] = useState<EntryType>(EntryType.SUPPORT_CASE);
   const [isLoading, setIsLoading] = useState(true);
@@ -105,7 +112,8 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
         ),
         support_case(*),
         product_knowledge(*),
-        process(*)
+        process(*),
+        images:entry_images(id, file_path, created_at)
       `)
           .eq('id', entryId)
           .single();
@@ -133,6 +141,9 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
           description: entryData.process?.description || ''
         })
       }));
+      if (entryData.images) {
+        setImages(entryData.images);
+      }
 
       await log(LogLevel.INFO, 'Entry data fetched successfully', { entryId });
     } catch (error) {
@@ -435,9 +446,20 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                           required
                       />
                     </div>
-                )}
-              </div>
 
+                )}
+
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Images
+                </label>
+                <EditImages
+                    entryId={entryId}
+                    images={images}
+                    onImagesChange={() => fetchEntryData()}
+                />
+              </div>
               <div className="mt-6 flex justify-end gap-3">
                 <StatusButtons
                     status={formData.status}
@@ -464,4 +486,4 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
         </div>
       </div>
   );
-  }
+}
