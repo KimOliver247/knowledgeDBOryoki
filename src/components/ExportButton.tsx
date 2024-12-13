@@ -50,6 +50,7 @@ export function ExportButton() {
           topics(name)
         )
       `)
+        .eq('status', 'published')
       .order('created_at', { ascending: false });
 
     if (entriesError) throw entriesError;
