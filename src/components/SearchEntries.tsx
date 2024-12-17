@@ -336,17 +336,59 @@ export function SearchEntries() {
           <div className="flow-root mt-8">
             <ul role="list" className="-my-6 divide-y divide-gray-100 dark:divide-gray-700">
               {filteredEntries.map((entry) => (
-                  <li key={entry.id} className="py-6 group hover:bg-stone-50 dark:hover:bg-gray-700/50 -mx-8 px-8 transition-colors">
+                  <li key={entry.id} className="py-6 group -mx-8 px-8 relative">
+                    {/* Clickable container for view */}
+                    <button
+                        onClick={() => setViewingEntryId(entry.id)}
+                        className="absolute inset-0 w-full h-full cursor-pointer z-10"
+                    >
+                      <div
+                          className="absolute top-2 right-[35%] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <div className="flex items-center gap-2 text-gray-500">
+                          <Eye className="w-4 h-4"/>
+                          <span className="text-sm">Klicken um zu öffnen</span>
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* Edit and Delete buttons overlay */}
+                    <div
+                        className="absolute right-8 top-0 h-full w-[30%] opacity-0 group-hover:opacity-100 flex transition-opacity duration-200 z-20">
+                      <button
+                          onClick={() => setEditingEntryId(entry.id)}
+                          className="h-full flex items-center justify-center flex-1 bg-blue-500/70 hover:bg-blue-500/80 text-white font-medium transition-all duration-200"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Edit className="w-5 h-5"/>
+                          <span>Edit</span>
+                        </div>
+                      </button>
+
+                      <button
+                          onClick={() => {
+                            if (confirm('Sind Sie sicher, dass Sie diese Eintrag löschen möchten?')) {
+                              handleDelete(entry.id, entry.type);
+                            }
+                          }}
+                          className="h-full flex items-center justify-center flex-1 bg-red-500/70 hover:bg-red-500/80 text-white font-medium transition-all duration-200"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Trash2 className="w-5 h-5"/>
+                          <span>Delete</span>
+                        </div>
+                      </button>
+                    </div>
+
                     <div className="flex items-center space-x-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3">
-                          <span
-                              className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#59140b] dark:bg-[#59140b]/50 dark:text-white ${getEntryTypeIcon(
-                                  entry.type
-                              )}`}
-                          >
-                            {entry.type.replace('_', ' ').toUpperCase()}
-                          </span>
+        <span
+            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#59140b] dark:bg-[#59140b]/50 dark:text-white ${getEntryTypeIcon(
+                entry.type
+            )}`}
+        >
+          {entry.type.replace('_', ' ').toUpperCase()}
+        </span>
                           <div className="flex items-center gap-2">
                             <Clock className="w-3 h-3 text-gray-500 dark:text-gray-400"/>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -357,27 +399,31 @@ export function SearchEntries() {
                             </p>
                           </div>
                           {entry.status === 'draft' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-                                <Save className="w-3 h-3"/>
-                                Entwurf
-                              </span>
+                              <span
+                                  className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+            <Save className="w-3 h-3"/>
+            Entwurf
+          </span>
                           )}
                           {entry.is_frequent && (
-                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
-                                <BarChart2 className="w-3 h-3"/>
-                                Häufig
-                              </span>
+                              <span
+                                  className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
+            <BarChart2 className="w-3 h-3"/>
+            Häufig
+          </span>
                           )}
                           {entry.needs_improvement && (
-                              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
-                                <AlertTriangle className="w-3 h-3"/>
-                                Verbesserung erforderlich
-                              </span>
+                              <span
+                                  className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
+            <AlertTriangle className="w-3 h-3"/>
+            Verbesserung erforderlich
+          </span>
                           )}
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-                            <User className="w-3 h-3"/>
+                          <span
+                              className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+          <User className="w-3 h-3"/>
                             {entry.author?.username || 'Unknown'}
-                          </span>
+        </span>
                         </div>
                         <p className="text-lg font-medium text-gray-900 dark:text-white mt-2">{entry.heading}</p>
                         <div className="flex flex-wrap gap-2 mt-3">
@@ -386,37 +432,10 @@ export function SearchEntries() {
                                   key={`${entry.id}-${name}-${index}`}
                                   className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium tag dark:bg-gray-700 dark:text-gray-300"
                               >
-                                {name}
-                              </span>
+            {name}
+          </span>
                           ))}
                         </div>
-                      </div>
-                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                            onClick={() => setViewingEntryId(entry.id)}
-                            className="p-2 text-gray-400 dark:text-gray-500 hover:text-[#59140b] dark:hover:text-[#ff8b7e] rounded-lg transition-colors"
-                            title="Ansehen"
-                        >
-                          <Eye className="w-5 h-5"/>
-                        </button>
-                        <button
-                            onClick={() => setEditingEntryId(entry.id)}
-                            className="p-2 text-gray-400 dark:text-gray-500 hover:text-[#59140b] dark:hover:text-[#ff8b7e] rounded-lg transition-colors"
-                            title="Bearbeiten"
-                        >
-                          <Edit className="w-5 h-5"/>
-                        </button>
-                        <button
-                            onClick={() => {
-                              if (confirm('Sind Sie sicher, dass Sie diese Eintrag löschen möchten?')) {
-                                handleDelete(entry.id, entry.type);
-                              }
-                            }}
-                            className="p-2 text-gray-400 dark:text-gray-500 hover:text-[#59140b] rounded-lg dark:hover:text-[#ff8b7e] transition-colors"
-                            title="Eintrag löschen"
-                        >
-                          <Trash2 className="w-5 h-5"/>
-                        </button>
                       </div>
                     </div>
                   </li>
