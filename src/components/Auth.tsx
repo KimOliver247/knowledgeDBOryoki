@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Shield } from 'lucide-react';
-import { authenticateUser, updateLastLogin } from '../lib/auth';
+import { authenticateUser, updateLastLogin, verifyLastLogin } from '../lib/auth';
 import { log, LogLevel } from '../lib/logger';
 import toast from 'react-hot-toast';
 
@@ -23,7 +23,14 @@ export function Auth({ onAuth }: AuthProps) {
 
       if (authenticated) {
         localStorage.setItem('currentUser', username);
-        await updateLastLogin(username);
+        console.log('About to update last login for:', username);
+        try {
+          await updateLastLogin(username);
+          // Add verification step
+          await verifyLastLogin(username);
+        } catch (updateError) {
+          console.error('Failed to update last login:', updateError);
+        }
         await log(LogLevel.INFO, 'Login successful', { username, is_admin });
         onAuth(true, is_admin);
         toast.success('Successfully authenticated!');

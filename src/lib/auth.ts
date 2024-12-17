@@ -49,20 +49,49 @@ export async function authenticateUser(username: string, password: string): Prom
 
 export async function updateLastLogin(username: string): Promise<void> {
   try {
-    const { error } = await supabase
-      .from('kb_users')
-      .update({ last_login: new Date().toISOString() })
-      .eq('username', username);
+    const timestamp = new Date().toISOString();
 
-    if (error) {
-      await log(LogLevel.ERROR, 'Failed to update last login', {
+    await log(LogLevel.INFO, 'Attempting last login update', {
+      username,
+      timestamp,
+    });
+
+    // First, let's verify the user exists
+    const { data: user, error: selectError } = await supabase
+        .from('kb_users')
+        .select('username')
+        .eq('username', username)
+        .single();
+
+    if (selectError || !user) {
+      await log(LogLevel.ERROR, 'User not found for last login update', {
         username,
-        error: error.message
+        error: selectError?.message
       });
-      throw error;
+      throw new Error('User not found');
     }
 
-    await log(LogLevel.INFO, 'Updated last login', { username });
+    // Now perform the update
+    const { error: updateError } = await supabase
+        .from('kb_users')
+        .update({ last_login: timestamp })
+        .eq('username', username);
+
+    if (updateError) {
+      await log(LogLevel.ERROR, 'Failed to update last login', {
+        username,
+        error: updateError.message,
+        code: updateError.code,
+        details: updateError.details
+      });
+      throw updateError;
+    }
+
+    await log(LogLevel.INFO, 'Last login updated successfully', {
+      username,
+      timestamp
+    });
+
   } catch (error) {
     await log(LogLevel.ERROR, 'Exception updating last login', {
       username,
@@ -70,6 +99,20 @@ export async function updateLastLogin(username: string): Promise<void> {
     });
     throw error;
   }
+}
+
+export async function verifyLastLogin(username: string): Promise<void> {
+  const { data, error } = await supabase
+      .from('kb_users')
+      .select('last_login')
+      .eq('username', username)
+      .single();
+
+  await log(LogLevel.INFO, 'Verify last login value', {
+    username,
+    lastLogin: data?.last_login,
+    error: error?.message
+  });
 }
 
 export async function getCurrentUser(): Promise<{ id: string } | null> {
