@@ -14,7 +14,7 @@ export function Layout({ children, currentUser, isAdmin, activeView, onNavigate,
   const menuItems = [
     { id: 'knowledge-base', label: 'Knowledge Base', icon: BookOpen },
     ...(isAdmin ? [{ id: 'user-admin', label: 'User Administration', icon: Users }] : []),
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'settings', label: 'Einstellungen', icon: Settings },
   ];
 
   return (
@@ -62,7 +62,7 @@ export function Layout({ children, currentUser, isAdmin, activeView, onNavigate,
                   className="w-full flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
               >
                 <LogOut className="w-4 h-4" />
-                Logout
+                Ausloggen
               </button>
             </div>
           </div>

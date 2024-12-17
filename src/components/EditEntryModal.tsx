@@ -302,7 +302,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
 
           <div className="inline-block w-full max-w-2xl my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-gray-800 rounded-lg shadow-xl">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">Edit Entry</h3>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">Eintrag bearbeiten</h3>
               <button
                   onClick={onClose}
                   className="text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none"
@@ -314,7 +314,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
             <form onSubmit={handleSubmit} className="px-6 py-4">
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Topics</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Themen</label>
                   <TopicMultiSelect
                       selectedTopics={formData.topics}
                       onChange={(topics) => setFormData(prev => ({...prev, topics}))}
@@ -323,7 +323,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
 
                 <div>
                   <label htmlFor="heading" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Heading
+                    Titel
                   </label>
                   <input
                       type="text"
@@ -348,7 +348,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                         className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#59140b]/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#59140b]"></div>
                     <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
                     <BarChart2 className="w-4 h-4"/>
-                    Occurs Frequently
+                    Häufig
                   </span>
                   </label>
 
@@ -363,7 +363,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                         className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#59140b]/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#59140b]"></div>
                     <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
                     <AlertTriangle className="w-4 h-4"/>
-                    Needs Improvement
+                    Verbesserung erforderlich
                   </span>
                   </label>
                 </div>
@@ -388,7 +388,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                       <div>
                         <label htmlFor="solution"
                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          Solution
+                          Lösung
                         </label>
                         <textarea
                             id="solution"
@@ -402,7 +402,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          Customer Satisfaction
+                          Kundenzufriedenheit
                         </label>
                         <StarRating
                             value={formData.customerSatisfaction}
@@ -416,7 +416,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                     <div>
                       <label htmlFor="knowledgeContent"
                              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Knowledge Content
+                        Produktwissen
                       </label>
                       <textarea
                           id="knowledgeContent"
@@ -434,7 +434,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                     <div>
                       <label htmlFor="description"
                              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Description
+                        Beschreibung
                       </label>
                       <textarea
                           id="description"
@@ -452,7 +452,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Images
+                  Bilder
                 </label>
                 <EditImages
                     entryId={entryId}
@@ -471,7 +471,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                     onClick={onClose}
                     className="px-4 py-2 text-sm font-medium btn-secondary rounded-lg"
                 >
-                  Cancel
+                  Abbrechen
                 </button>
                 <button
                     type="submit"

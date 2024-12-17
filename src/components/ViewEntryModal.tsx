@@ -182,7 +182,14 @@ export function ViewEntryModal({ entryId, isOpen, onClose }: ViewEntryModalProps
                     <div className="pr-8">
                       <div className="flex items-center gap-3 mb-4">
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#59140b]/10 dark:bg-[#59140b]/50 text-[#59140b] dark:text-white">
-                        {entry.type.replace('_', ' ').toUpperCase()}
+                        {(() => {
+                          const typeMap: Record<string, string> = {
+                            'SUPPORT_CASE': 'SUPPORT-FALL',
+                            'PRODUCT_KNOWLEDGE': 'PRODUKTWISSEN',
+                            'PROCESS': 'PROZESS'
+                          };
+                          return typeMap[entry.type];
+                        })()}
                       </span>
                         {entry.status === 'draft' && (
                             <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">

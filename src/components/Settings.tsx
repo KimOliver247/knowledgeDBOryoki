@@ -1,4 +1,3 @@
-import React from 'react';
 import { Moon, Sun, ExternalLink } from 'lucide-react';
 import { useDarkMode } from './DarkModeContext';
 
@@ -7,7 +6,7 @@ export function Settings() {
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-medium text-gray-900 dark:text-white mb-6">Settings</h2>
+            <h2 className="text-xl font-medium text-gray-900 dark:text-white mb-6">Einstellungen</h2>
 
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
@@ -20,7 +19,7 @@ export function Settings() {
                         <div>
                             <p className="text-sm font-medium text-gray-900 dark:text-white">Dark Mode</p>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                                Switch between light and dark theme
+                                Wechseln zwischen heller und dunkler Farbe
                             </p>
                         </div>
                     </div>
@@ -46,7 +45,7 @@ export function Settings() {
                         onClick={() => window.open('https://effulgent-fairy-6cef82.netlify.app/', '_blank')}
                         className="mt-2 inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#59140b]"
                     >
-                        Talk to Orybot
+                        Mit Orybot chatten
                         <ExternalLink className="ml-2 h-4 w-4" />
                     </button>
                 </div>

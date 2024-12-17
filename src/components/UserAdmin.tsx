@@ -120,13 +120,13 @@ export function UserAdmin() {
   return (
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-8">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-light text-gray-900 dark:text-white">User Administration</h2>
+          <h2 className="text-2xl font-light text-gray-900 dark:text-white">Benutzernamen</h2>
           <button
               onClick={() => setShowCreateForm(!showCreateForm)}
               className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg btn-primary"
           >
             <UserPlus className="w-4 h-4" />
-            Create User
+            Benutzer erstellen
           </button>
         </div>
 
@@ -135,7 +135,7 @@ export function UserAdmin() {
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div>
                   <label htmlFor="username" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-                    Username
+                    Benutzername
                   </label>
                   <input
                       type="text"
@@ -148,7 +148,7 @@ export function UserAdmin() {
                 </div>
                 <div>
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-                    Password
+                    Passwort
                   </label>
                   <input
                       type="password"
@@ -162,7 +162,7 @@ export function UserAdmin() {
               </div>
 
               <div className="mt-6">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Role</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Rolle</label>
                 <div className="flex gap-4">
                   <label className="inline-flex items-center">
                     <input
@@ -193,14 +193,14 @@ export function UserAdmin() {
                     onClick={() => setShowCreateForm(false)}
                     className="px-4 py-2 text-sm font-medium btn-secondary rounded-lg"
                 >
-                  Cancel
+                  Abbrechen
                 </button>
                 <button
                     type="submit"
                     disabled={isLoading}
                     className="px-4 py-2 text-sm font-medium btn-primary rounded-lg disabled:opacity-50"
                 >
-                  Create User
+                  Benutzer erstellen
                 </button>
               </div>
             </form>
@@ -212,12 +212,12 @@ export function UserAdmin() {
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead>
                 <tr>
-                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">Username</th>
-                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">Role</th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">Benutzername</th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">Rolle</th>
                   <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">Status</th>
-                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">Created</th>
-                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">Last Login</th>
-                  <th className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900 dark:text-gray-200">Actions</th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">Erstellt</th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">Letzte Anmeldung</th>
+                  <th className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900 dark:text-gray-200">Aktionen</th>
                 </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">

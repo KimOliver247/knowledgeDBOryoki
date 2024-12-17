@@ -55,8 +55,8 @@ export function Auth({ onAuth }: AuthProps) {
           <div className="bg-[#59140b]/10 p-3 rounded-full mb-4">
             <Shield className="w-8 h-8 text-[#59140b]" />
           </div>
-          <h2 className="text-2xl font-light text-gray-900">Knowledge Base Access</h2>
-          <p className="text-gray-500 mt-2 text-center">Enter your credentials to access the knowledge base system</p>
+          <h2 className="text-2xl font-light text-gray-900">Knowledge Base Zugang</h2>
+          <p className="text-gray-500 mt-2 text-center">Geben Sie Ihre Anmeldeinformationen ein, um auf das Wissensdatenbank-System zuzugreifen</p>
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -68,7 +68,7 @@ export function Auth({ onAuth }: AuthProps) {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-200 input-focus transition-colors"
-              placeholder="Enter username"
+              placeholder="Benutzername eingeben"
               required
             />
           </div>
@@ -81,7 +81,7 @@ export function Auth({ onAuth }: AuthProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-200 input-focus transition-colors"
-              placeholder="Enter password"
+              placeholder="Passwort eingeben"
               required
             />
           </div>
@@ -91,7 +91,7 @@ export function Auth({ onAuth }: AuthProps) {
             disabled={isLoading}
             className="w-full flex justify-center py-3 px-4 rounded-lg shadow-sm text-sm font-medium btn-primary transition-all duration-300 disabled:opacity-50"
           >
-            {isLoading ? 'Authenticating...' : 'Access Knowledge Base'}
+            {isLoading ? 'Authenticating...' : 'Anmelden'}
           </button>
         </form>
       </div>

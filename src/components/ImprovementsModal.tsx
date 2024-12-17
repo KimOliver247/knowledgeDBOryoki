@@ -121,7 +121,7 @@ export function ImprovementsModal({ isOpen, onClose, onCreateEntry }: Improvemen
 
           <div className="inline-block w-full max-w-4xl my-8 overflow-hidden text-left align-middle transition-all transform bg-white dark:bg-gray-800 rounded-xl shadow-xl">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">Suggested Improvements</h3>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">Vorschläge für Verbesserungen</h3>
               <button
                   onClick={onClose}
                   className="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none"
@@ -141,7 +141,7 @@ export function ImprovementsModal({ isOpen, onClose, onCreateEntry }: Improvemen
                   </div>
               ) : improvements.length === 0 ? (
                   <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                    No improvements available
+                    Keine Verbesserungen verfügbar
                   </div>
               ) : (
                   <div className="space-y-6">
@@ -156,7 +156,7 @@ export function ImprovementsModal({ isOpen, onClose, onCreateEntry }: Improvemen
                                 {improvement.question}
                               </h4>
                               <p className="text-sm text-gray-500 dark:text-gray-400">
-                                Added on {formatDate(improvement.created_at)}
+                                Hinzugefügt am {formatDate(improvement.created_at)}
                               </p>
                             </div>
                             <div className="flex items-center gap-2">
@@ -170,7 +170,7 @@ export function ImprovementsModal({ isOpen, onClose, onCreateEntry }: Improvemen
                                 ) : (
                                     <Trash2 className="w-4 h-4" />
                                 )}
-                                Delete
+                                Löschen
                               </button>
                               <button
                                   onClick={() => handleCreateEntry(improvement)}
@@ -178,7 +178,7 @@ export function ImprovementsModal({ isOpen, onClose, onCreateEntry }: Improvemen
                                   className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg btn-primary dark:bg-[#59140b] dark:text-white dark:hover:bg-[#59140b]/90 disabled:opacity-50 disabled:cursor-not-allowed"
                               >
                                 <Plus className="w-4 h-4" />
-                                Convert to Entry
+                                In Eintrag umwandeln
                               </button>
                             </div>
                           </div>

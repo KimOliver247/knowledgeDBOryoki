@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Search, Eye, Edit, Loader2, X, AlertTriangle, BarChart2, Save, User, Trash2, RotateCcw  } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { EntryType, Topic } from '../types';
@@ -27,9 +27,9 @@ interface Entry {
 }
 
 const ENTRY_TYPES = [
-  { id: EntryType.SUPPORT_CASE, label: 'Support Case' },
-  { id: EntryType.PRODUCT_KNOWLEDGE, label: 'Product Knowledge' },
-  { id: EntryType.PROCESS, label: 'Process' }
+  { id: EntryType.SUPPORT_CASE, label: 'Support Anfrage' },
+  { id: EntryType.PRODUCT_KNOWLEDGE, label: 'Produktwissen' },
+  { id: EntryType.PROCESS, label: 'Prozess' }
 ];
 
 export function SearchEntries() {
@@ -268,7 +268,7 @@ export function SearchEntries() {
                     }`}
                 >
                   <Save className="w-4 h-4"/>
-                  <span>Drafts Only</span>
+                  <span>Nur Entwürfe</span>
                   {showDraftsOnly && (
                       <X className="w-4 h-4 opacity-50 group-hover:opacity-100"/>
                   )}
@@ -278,7 +278,7 @@ export function SearchEntries() {
                     className="group flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-[#59140b] text-gray-600 dark:text-gray-300 hover:text-[#59140b] dark:hover:text-[#ff8b7e] transition-all duration-200"
                 >
                   <RotateCcw className="w-4 h-4"/>
-                  <span>Reset Filters</span>
+                  <span>Filter zurücksetzen</span>
                 </button>
               </div>
 
@@ -288,7 +288,7 @@ export function SearchEntries() {
                   onChange={(e) => setSelectedUser(e.target.value || null)}
                   className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#59140b]/20 transition-colors"
               >
-                <option value="">All Users</option>
+                <option value="">Alle Benutzer</option>
                 {users.map((user) => (
                     <option key={user.id} value={user.id}>
                       {user.username}
@@ -315,7 +315,7 @@ export function SearchEntries() {
                   </button>
               ))}
               {availableTopics.length === 0 && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400">No topics available for the selected filters</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Keine Themen verfügbar für die ausgewählten Filter</p>
               )}
             </div>
 
@@ -328,7 +328,7 @@ export function SearchEntries() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="block w-full pl-12 pr-4 py-3 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg input-focus transition-colors"
-                  placeholder="Search entries by heading or topic..."
+                  placeholder="Suche nach Titel oder Thema..."
               />
             </div>
           </div>
@@ -350,28 +350,28 @@ export function SearchEntries() {
                           <div className="flex items-center gap-2">
                             <Clock className="w-3 h-3 text-gray-500 dark:text-gray-400"/>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                              Created: {formatDate(entry.created_at)}
+                              Erstellt: {formatDate(entry.created_at)}
                               {entry.last_modified_at && (
-                                  <span className="ml-2">• Modified: {formatDate(entry.last_modified_at)}</span>
+                                  <span className="ml-2">• Geändert: {formatDate(entry.last_modified_at)}</span>
                               )}
                             </p>
                           </div>
                           {entry.status === 'draft' && (
                               <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                                 <Save className="w-3 h-3"/>
-                                Draft
+                                Entwurf
                               </span>
                           )}
                           {entry.is_frequent && (
                               <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
                                 <BarChart2 className="w-3 h-3"/>
-                                Frequent
+                                Häufig
                               </span>
                           )}
                           {entry.needs_improvement && (
                               <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">
                                 <AlertTriangle className="w-3 h-3"/>
-                                Needs Improvement
+                                Verbesserung erforderlich
                               </span>
                           )}
                           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
@@ -395,25 +395,25 @@ export function SearchEntries() {
                         <button
                             onClick={() => setViewingEntryId(entry.id)}
                             className="p-2 text-gray-400 dark:text-gray-500 hover:text-[#59140b] dark:hover:text-[#ff8b7e] rounded-lg transition-colors"
-                            title="View entry"
+                            title="Ansehen"
                         >
                           <Eye className="w-5 h-5"/>
                         </button>
                         <button
                             onClick={() => setEditingEntryId(entry.id)}
                             className="p-2 text-gray-400 dark:text-gray-500 hover:text-[#59140b] dark:hover:text-[#ff8b7e] rounded-lg transition-colors"
-                            title="Edit entry"
+                            title="Bearbeiten"
                         >
                           <Edit className="w-5 h-5"/>
                         </button>
                         <button
                             onClick={() => {
-                              if (confirm('Are you sure you want to delete this entry?')) {
+                              if (confirm('Sind Sie sicher, dass Sie diese Eintrag löschen möchten?')) {
                                 handleDelete(entry.id, entry.type);
                               }
                             }}
                             className="p-2 text-gray-400 dark:text-gray-500 hover:text-[#59140b] rounded-lg dark:hover:text-[#ff8b7e] transition-colors"
-                            title="Delete entry"
+                            title="Eintrag löschen"
                         >
                           <Trash2 className="w-5 h-5"/>
                         </button>
@@ -425,9 +425,9 @@ export function SearchEntries() {
                   <li className="py-12">
                     <div className="text-center text-gray-500 dark:text-gray-400">
                       {entries.length === 0 ? (
-                          <p>No entries found. Start by creating a new entry.</p>
+                          <p>Keine Einträge gefunden. Erstellen Sie einen neuen Eintrag.</p>
                       ) : (
-                          <p>No entries match your search criteria.</p>
+                          <p>Keine Einträge passen zu Ihren Suchkriterien.</p>
                       )}
                     </div>
                   </li>

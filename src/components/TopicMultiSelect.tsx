@@ -147,7 +147,7 @@ export function TopicMultiSelect({ selectedTopics, onChange }: TopicMultiSelectP
                 </span>
                   ))
               ) : (
-                  <span className="text-gray-500 dark:text-gray-400">Select or create topics</span>
+                  <span className="text-gray-500 dark:text-gray-400">Themen auswählen oder erstellen</span>
               )}
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2">
@@ -169,7 +169,7 @@ export function TopicMultiSelect({ selectedTopics, onChange }: TopicMultiSelectP
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="block w-full pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md text-sm input-focus"
-                      placeholder="Search or create topic..."
+                      placeholder="Thema suchen oder erstellen"
                       onClick={(e) => e.stopPropagation()}
                   />
                 </div>
@@ -215,7 +215,7 @@ export function TopicMultiSelect({ selectedTopics, onChange }: TopicMultiSelectP
 
                 {filteredTopics.length === 0 && searchQuery.trim() === '' && (
                     <div className="px-4 py-6 text-sm text-center text-gray-500 dark:text-gray-400">
-                      Start typing to search or create a topic
+                      Fange mit der Eingabe zu suchen oder ein Thema zu erstellen
                     </div>
                 )}
               </div>

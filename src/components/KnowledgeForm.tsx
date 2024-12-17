@@ -194,7 +194,7 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                     className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg bg-amber-600 text-white hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors dark:bg-amber-700 dark:hover:bg-amber-600"
                 >
                   <Lightbulb className="w-4 h-4"/>
-                  Improvements
+                  Verbesserungen
                 </button>
                 <ExportButton/>
               </>
@@ -208,12 +208,12 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
             {showForm ? (
                 <>
                   <X className="w-4 h-4"/>
-                  Cancel
+                  Abbrechen
                 </>
             ) : (
                 <>
                   <PlusCircle className="w-4 h-4"/>
-                  New Entry
+                  Neuer Eintrag
                 </>
             )}
           </button>
@@ -227,23 +227,23 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                         <div>
                             <label htmlFor="entryType"
                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Entry Type
+                                Eintragstyp
                             </label>
-                            <select
-                                id="entryType"
-                                value={entryType}
-                                onChange={(e) => setEntryType(e.target.value as EntryType)}
-                                className="block w-full pl-4 pr-10 py-3 text-base border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg input-focus transition-colors"
-                            >
-                                <option value={EntryType.SUPPORT_CASE}>Support Case</option>
-                                <option value={EntryType.PRODUCT_KNOWLEDGE}>Product Knowledge</option>
-                                <option value={EntryType.PROCESS}>Process</option>
-                            </select>
+                                    <select
+                                    id="entryType"
+                                    value={entryType}
+                                    onChange={(e) => setEntryType(e.target.value as EntryType)}
+                                    className="block w-full pl-4 border border-gray-200 pr-10 py-3 text-base dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg input-focus transition-colors"
+                                >
+                                    <option value={EntryType.SUPPORT_CASE}>Support Anfrage</option>
+                                    <option value={EntryType.PRODUCT_KNOWLEDGE}>Produktwissen</option>
+                                    <option value={EntryType.PROCESS}>Prozess</option>
+                                </select>
                         </div>
 
                         <div>
                             <label
-                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Topics</label>
+                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Themen</label>
                             <TopicMultiSelect
                                 selectedTopics={formData.topics}
                                 onChange={(topics) => setFormData(prev => ({...prev, topics}))}
@@ -254,7 +254,7 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                     <div>
                         <label htmlFor="heading"
                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Heading
+                            Titel
                         </label>
                         <input
                             type="text"
@@ -280,7 +280,7 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                             <span
                                 className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
                   <BarChart2 className="w-4 h-4"/>
-                  Occurs Frequently
+                  Häufig
                 </span>
                         </label>
 
@@ -296,7 +296,7 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                             <span
                                 className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300 flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4"/>
-                  Needs Improvement
+                  Verbesserung erforderlich
                 </span>
                         </label>
                     </div>
@@ -321,7 +321,7 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                             <div>
                                 <label htmlFor="solution"
                                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Solution
+                                    Lösung
                                 </label>
                                 <textarea
                                     id="solution"
@@ -335,7 +335,7 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Customer Satisfaction
+                                    Kundenzufriedenheit
                                 </label>
                                 <StarRating
                                     value={formData.customerSatisfaction}
@@ -352,7 +352,7 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                         <div>
                             <label htmlFor="knowledgeContent"
                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Knowledge Content
+                                Produktwissen
                             </label>
                             <textarea
                                 id="knowledgeContent"
@@ -370,7 +370,7 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                         <div>
                             <label htmlFor="description"
                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Description
+                                Beschreibung
                             </label>
                             <textarea
                                 id="description"
@@ -385,7 +385,7 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                     )}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Images
+                            Bilder
                         </label>
                         <ImageUploader
                             files={formData.files}
@@ -401,7 +401,7 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                             className="inline-flex items-center gap-2 px-6 py-3 rounded-lg btn-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
                         >
                             <Save className="w-4 h-4"/>
-                            Save as Draft
+                            Als Entwurf speichern
                         </button>
                         <button
                             type="button"
@@ -410,7 +410,7 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                             className="inline-flex items-center gap-2 px-6 py-3 rounded-lg btn-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
                         >
                             <Send className="w-4 h-4"/>
-                            Publish
+                            Veröffentlichen
                         </button>
                     </div>
                 </form>
