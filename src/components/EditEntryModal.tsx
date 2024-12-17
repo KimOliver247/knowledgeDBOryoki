@@ -277,7 +277,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
               className="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 rounded-lg flex items-center gap-2"
           >
             <ArrowUpCircle className="w-4 h-4" />
-            Publish Entry
+            Eintrag veröffentlichen
           </button>
       );
     }
@@ -289,7 +289,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
             className="px-4 py-2 text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-800 rounded-lg flex items-center gap-2"
         >
           <Save className="w-4 h-4" />
-          Convert to Draft
+          Als Entwurf speichern
         </button>
     );
   });
@@ -478,7 +478,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                     disabled={isLoading}
                     className="px-4 py-2 text-sm font-medium btn-primary rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isLoading ? 'Saving...' : 'Save Changes'}
+                  {isLoading ? 'Saving...' : 'Änderungen speichern'}
                 </button>
               </div>
             </form>

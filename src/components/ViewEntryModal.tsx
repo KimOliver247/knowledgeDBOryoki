@@ -181,19 +181,25 @@ export function ViewEntryModal({ entryId, isOpen, onClose }: ViewEntryModalProps
                   <div className="px-8 py-6 border-b border-gray-100 dark:border-gray-700">
                     <div className="pr-8">
                       <div className="flex items-center gap-3 mb-4">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#59140b]/10 dark:bg-[#59140b]/50 text-[#59140b] dark:text-white">
-                        {(() => {
-                          const typeMap: Record<string, string> = {
-                            'SUPPORT_CASE': 'SUPPORT-FALL',
-                            'PRODUCT_KNOWLEDGE': 'PRODUKTWISSEN',
-                            'PROCESS': 'PROZESS'
-                          };
-                          return typeMap[entry.type];
-                        })()}
-                      </span>
+                 <span
+                     className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#59140b]/10 dark:bg-[#59140b]/50 text-[#59140b] dark:text-white">
+  {(() => {
+    switch (entry.type) {
+      case EntryType.SUPPORT_CASE:
+        return 'SUPPORT-FALL';
+      case EntryType.PRODUCT_KNOWLEDGE:
+        return 'PRODUKTWISSEN';
+      case EntryType.PROCESS:
+        return 'PROZESS';
+      default:
+        return entry.type;
+    }
+  })()}
+</span>
                         {entry.status === 'draft' && (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
-                            DRAFT
+                            <span
+                                className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                            ENTWURF
                           </span>
                         )}
                       </div>
@@ -202,8 +208,8 @@ export function ViewEntryModal({ entryId, isOpen, onClose }: ViewEntryModalProps
                       <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
                         <div className="flex items-center gap-2">
                           <Clock className="w-4 h-4"/>
-                          <span>Created on {formatDate(entry.created_at)}</span>
-                          <span className="mx-2">by</span>
+                          <span>Erstellt am {formatDate(entry.created_at)}</span>
+                          <span className="mx-2">von</span>
                           <User className="w-4 h-4"/>
                           <span>{entry.author?.username || 'Unknown'}</span>
                         </div>
@@ -213,8 +219,8 @@ export function ViewEntryModal({ entryId, isOpen, onClose }: ViewEntryModalProps
                           <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                             <div className="flex items-center gap-2">
                               <Clock className="w-4 h-4"/>
-                              <span>Modified on {formatDate(entry.last_modified_at)}</span>
-                              <span className="mx-2">by</span>
+                              <span>Geändert am {formatDate(entry.last_modified_at)}</span>
+                              <span className="mx-2">von</span>
                               <User className="w-4 h-4"/>
                               <span>{entry.last_modified_by?.username || 'Unknown'}</span>
                             </div>
@@ -250,13 +256,13 @@ export function ViewEntryModal({ entryId, isOpen, onClose }: ViewEntryModalProps
                             </div>
                           </div>
                           <div className="mb-6">
-                            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Solution</h4>
+                            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Lösung</h4>
                             <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg">
                               <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{entry.support_case.solution}</p>
                             </div>
                           </div>
                           <div>
-                            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Customer Satisfaction</h4>
+                            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Kundenzufriedenheit</h4>
                             <StarRating
                                 value={entry.support_case.customer_satisfaction}
                                 onChange={() => {}}
@@ -268,7 +274,7 @@ export function ViewEntryModal({ entryId, isOpen, onClose }: ViewEntryModalProps
 
                     {entry.type === EntryType.PRODUCT_KNOWLEDGE && entry.product_knowledge && (
                         <div>
-                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Content</h4>
+                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Inhalt</h4>
                           <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg">
                             <p className="text-gray-900 dark:text-white whitespace-pre-wrap">
                               {entry.product_knowledge.knowledge_content}
@@ -279,7 +285,7 @@ export function ViewEntryModal({ entryId, isOpen, onClose }: ViewEntryModalProps
 
                     {entry.type === EntryType.PROCESS && entry.process && (
                         <div>
-                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</h4>
+                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Beschreibung</h4>
                           <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg">
                             <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{entry.process.description}</p>
                           </div>

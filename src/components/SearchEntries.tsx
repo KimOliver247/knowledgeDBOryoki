@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Search, Eye, Edit, Loader2, X, AlertTriangle, BarChart2, Save, User, Trash2, RotateCcw  } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { EntryType, Topic } from '../types';
@@ -353,7 +353,7 @@ export function SearchEntries() {
 
                     {/* Edit and Delete buttons overlay */}
                     <div
-                        className="absolute right-8 top-0 h-full w-[30%] opacity-0 group-hover:opacity-100 flex transition-opacity duration-200 z-20">
+                        className="absolute right-8 top-0 h-full w-[30%] opacity-0 group-hover:opacity-80 flex transition-opacity duration-200 z-20">
                       <button
                           onClick={() => setEditingEntryId(entry.id)}
                           className="h-full flex items-center justify-center flex-1 bg-blue-500/70 hover:bg-blue-500/80 text-white font-medium transition-all duration-200"
@@ -382,13 +382,21 @@ export function SearchEntries() {
                     <div className="flex items-center space-x-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3">
-        <span
-            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#59140b] dark:bg-[#59140b]/50 dark:text-white ${getEntryTypeIcon(
-                entry.type
-            )}`}
-        >
-          {entry.type.replace('_', ' ').toUpperCase()}
-        </span>
+              <span
+                  className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#59140b]/10 dark:bg-[#59140b]/50 text-[#59140b] dark:text-white">
+  {(() => {
+    switch (entry.type) {
+      case EntryType.SUPPORT_CASE:
+        return 'SUPPORT-FALL';
+      case EntryType.PRODUCT_KNOWLEDGE:
+        return 'PRODUKTWISSEN';
+      case EntryType.PROCESS:
+        return 'PROZESS';
+      default:
+        return entry.type;
+    }
+  })()}
+</span>
                           <div className="flex items-center gap-2">
                             <Clock className="w-3 h-3 text-gray-500 dark:text-gray-400"/>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
