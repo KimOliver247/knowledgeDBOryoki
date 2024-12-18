@@ -373,9 +373,8 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                 {entryType === EntryType.SUPPORT_CASE && (
                     <>
                       <div>
-                        <label htmlFor="problem"
-                               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          Problem
+                        <label htmlFor="problem" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Problem <span className="text-xs text-gray-500">(Markdown unterstützt)</span>
                         </label>
                         <textarea
                             id="problem"
@@ -383,14 +382,13 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                             value={formData.problem}
                             onChange={handleInputChange}
                             rows={4}
-                            className="block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                            className="font-mono block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
                             required
                         />
                       </div>
                       <div>
-                        <label htmlFor="solution"
-                               className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          Lösung
+                        <label htmlFor="solution" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Lösung <span className="text-xs text-gray-500">(Markdown unterstützt)</span>
                         </label>
                         <textarea
                             id="solution"
@@ -398,7 +396,7 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                             value={formData.solution}
                             onChange={handleInputChange}
                             rows={4}
-                            className="block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                            className="font-mono block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
                             required
                         />
                       </div>
@@ -417,26 +415,34 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
                 {entryType === EntryType.PRODUCT_KNOWLEDGE && (
                     <div>
                       <label htmlFor="knowledgeContent" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Wissensinhalte
+                        Wissensinhalte <span className="text-xs text-gray-500">(Markdown unterstützt)</span>
                       </label>
-                      <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg prose dark:prose-invert max-w-none">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                          {formData.knowledgeContent || ''}
-                        </ReactMarkdown>
-                      </div>
+                      <textarea
+                        id="knowledgeContent"
+                        name="knowledgeContent"
+                        value={formData.knowledgeContent}
+                        onChange={handleInputChange}
+                        rows={6}
+                        className="font-mono block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                        required
+                      />
                     </div>
                 )}
 
                 {entryType === EntryType.PROCESS && (
                     <div>
                       <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Beschreibung
+                        Beschreibung <span className="text-xs text-gray-500">(Markdown unterstützt)</span>
                       </label>
-                      <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg prose dark:prose-invert max-w-none">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                          {formData.description || ''}
-                        </ReactMarkdown>
-                      </div>
+                      <textarea
+                        id="description"
+                        name="description"
+                        value={formData.description}
+                        onChange={handleInputChange}
+                        rows={6}
+                        className="font-mono block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                        required
+                      />
                     </div>
                 )}
 
