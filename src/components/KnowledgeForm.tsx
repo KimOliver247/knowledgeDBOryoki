@@ -306,7 +306,7 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                             <div>
                                 <label htmlFor="problem"
                                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Problem
+                                    Problem <span className="text-xs text-gray-500">(Markdown unterstützt)</span>
                                 </label>
                                 <textarea
                                     id="problem"
@@ -314,14 +314,15 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                                     value={formData.problem}
                                     onChange={handleInputChange}
                                     rows={4}
-                                    className="block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                                    className="font-mono block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                                    placeholder="# Überschrift&#10;- Aufzählung&#10;**Fett** oder *kursiv*"
                                     required
                                 />
                             </div>
                             <div>
                                 <label htmlFor="solution"
                                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Lösung
+                                    Lösung <span className="text-xs text-gray-500">(Markdown unterstützt)</span>
                                 </label>
                                 <textarea
                                     id="solution"
@@ -329,7 +330,8 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                                     value={formData.solution}
                                     onChange={handleInputChange}
                                     rows={4}
-                                    className="block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                                    className="font-mono block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                                    placeholder="# Überschrift&#10;- Aufzählung&#10;**Fett** oder *kursiv*"
                                     required
                                 />
                             </div>
@@ -352,7 +354,7 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                         <div>
                             <label htmlFor="knowledgeContent"
                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Produktwissen
+                                Wissensinhalte <span className="text-xs text-gray-500">(Markdown unterstützt)</span>
                             </label>
                             <textarea
                                 id="knowledgeContent"
@@ -360,7 +362,8 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                                 value={formData.knowledgeContent}
                                 onChange={handleInputChange}
                                 rows={6}
-                                className="block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                                className="font-mono block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                                placeholder="# Überschrift&#10;- Aufzählung&#10;**Fett** oder *kursiv*"
                                 required
                             />
                         </div>
@@ -370,7 +373,7 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                         <div>
                             <label htmlFor="description"
                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Beschreibung
+                                Beschreibung <span className="text-xs text-gray-500">(Markdown unterstützt)</span>
                             </label>
                             <textarea
                                 id="description"
@@ -378,7 +381,8 @@ export function KnowledgeForm({ showDraftsOnly }: KnowledgeFormProps) {
                                 value={formData.description}
                                 onChange={handleInputChange}
                                 rows={6}
-                                className="block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                                className="font-mono block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
+                                placeholder="# Überschrift&#10;- Aufzählung&#10;**Fett** oder *kursiv*"
                                 required
                             />
                         </div>

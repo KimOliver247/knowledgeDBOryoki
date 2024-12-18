@@ -8,6 +8,8 @@ import { log, LogLevel } from '../lib/logger';
 import { getCurrentUser } from '../lib/auth';
 import toast from 'react-hot-toast';
 import {EditImages} from "./EditImages.tsx";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface EditEntryModalProps {
   entryId: string;
@@ -414,39 +416,28 @@ export function EditEntryModal({ entryId, isOpen, onClose, onUpdate }: EditEntry
 
                 {entryType === EntryType.PRODUCT_KNOWLEDGE && (
                     <div>
-                      <label htmlFor="knowledgeContent"
-                             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Produktwissen
+                      <label htmlFor="knowledgeContent" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Wissensinhalte
                       </label>
-                      <textarea
-                          id="knowledgeContent"
-                          name="knowledgeContent"
-                          value={formData.knowledgeContent}
-                          onChange={handleInputChange}
-                          rows={6}
-                          className="block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
-                          required
-                      />
+                      <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg prose dark:prose-invert max-w-none">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {formData.knowledgeContent || ''}
+                        </ReactMarkdown>
+                      </div>
                     </div>
                 )}
 
                 {entryType === EntryType.PROCESS && (
                     <div>
-                      <label htmlFor="description"
-                             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Beschreibung
                       </label>
-                      <textarea
-                          id="description"
-                          name="description"
-                          value={formData.description}
-                          onChange={handleInputChange}
-                          rows={6}
-                          className="block w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white input-focus transition-colors"
-                          required
-                      />
+                      <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg prose dark:prose-invert max-w-none">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {formData.description || ''}
+                        </ReactMarkdown>
+                      </div>
                     </div>
-
                 )}
 
               </div>

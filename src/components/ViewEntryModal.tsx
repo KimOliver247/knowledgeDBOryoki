@@ -6,6 +6,8 @@ import { StarRating } from './StarRating';
 import { log, LogLevel } from '../lib/logger';
 import toast from 'react-hot-toast';
 import {ViewImages} from "./ViewImages.tsx";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface ViewEntryModalProps {
   entryId: string;
@@ -247,18 +249,22 @@ export function ViewEntryModal({ entryId, isOpen, onClose }: ViewEntryModalProps
                   </div>
 
                   <div className="p-8">
-                    {entry.type === EntryType.SUPPORT_CASE && entry.support_case && (
+                    {entry.type === EntryType.SUPPORT_CASE && (
                         <>
                           <div className="mb-6">
                             <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Problem</h4>
-                            <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg">
-                              <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{entry.support_case.problem}</p>
+                            <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg prose dark:prose-invert max-w-none">
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {entry.support_case?.problem || ''}
+                              </ReactMarkdown>
                             </div>
                           </div>
                           <div className="mb-6">
                             <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Lösung</h4>
-                            <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg">
-                              <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{entry.support_case.solution}</p>
+                            <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg prose dark:prose-invert max-w-none">
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {entry.support_case?.solution || ''}
+                              </ReactMarkdown>
                             </div>
                           </div>
                           <div>
@@ -272,22 +278,24 @@ export function ViewEntryModal({ entryId, isOpen, onClose }: ViewEntryModalProps
                         </>
                     )}
 
-                    {entry.type === EntryType.PRODUCT_KNOWLEDGE && entry.product_knowledge && (
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Inhalt</h4>
-                          <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg">
-                            <p className="text-gray-900 dark:text-white whitespace-pre-wrap">
-                              {entry.product_knowledge.knowledge_content}
-                            </p>
+                    {entry.type === EntryType.PRODUCT_KNOWLEDGE && (
+                        <div className="mb-6">
+                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Wissensinhalte</h4>
+                          <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg prose dark:prose-invert max-w-none">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {entry.product_knowledge?.knowledge_content || ''}
+                            </ReactMarkdown>
                           </div>
                         </div>
                     )}
 
-                    {entry.type === EntryType.PROCESS && entry.process && (
-                        <div>
+                    {entry.type === EntryType.PROCESS && (
+                        <div className="mb-6">
                           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Beschreibung</h4>
-                          <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg">
-                            <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{entry.process.description}</p>
+                          <div className="p-4 bg-stone-50 dark:bg-gray-700/50 rounded-lg prose dark:prose-invert max-w-none">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                              {entry.process?.description || ''}
+                            </ReactMarkdown>
                           </div>
                         </div>
                     )}
