@@ -3,7 +3,10 @@ import { useDarkMode } from './DarkModeContext';
 
 export function Settings() {
     const { isDarkMode, toggleDarkMode } = useDarkMode();
-
+    const handleToggle = () => {
+        console.log('Toggle clicked. Current dark mode:', isDarkMode);
+        toggleDarkMode();
+    };
     return (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-medium text-gray-900 dark:text-white mb-6">Einstellungen</h2>
@@ -25,7 +28,7 @@ export function Settings() {
                     </div>
 
                     <button
-                        onClick={toggleDarkMode}
+                        onClick={handleToggle}
                         className="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#59140b] focus:ring-offset-2"
                         style={{ backgroundColor: isDarkMode ? '#59140b' : '#d1d5db' }}
                     >
