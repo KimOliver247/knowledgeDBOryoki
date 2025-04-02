@@ -51,6 +51,7 @@ export function ExportButton() {
         )
       `)
         .eq('status', 'published')
+        .eq('needs_improvement', false)
       .order('created_at', { ascending: false });
 
     if (entriesError) throw entriesError;
